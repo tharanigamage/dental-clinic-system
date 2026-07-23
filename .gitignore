@@ -1,0 +1,8 @@
+target/
+.idea/
+*.iml
+out/
+*.class
+.DS_Store
+src/main/resources/db.properties
+*.log
