@@ -6,43 +6,53 @@ public class User {
     private String password;
     private String role;
 
-    public User () {
+    public User() {
     }
-    public User (int userId, String username, String password, String role){
-        this.userId= userId;
+
+    public User(int userId, String username, String password, String role) {
+        this.userId = userId;
         this.username = username;
         this.password = password;
         this.role = role;
     }
-    public int getUserId(){
+
+    public int getUserId() {
         return userId;
     }
-    public void setUserId (int userId){
+
+    public void setUserId(int userId) {
         this.userId = userId;
     }
-    public String getUsername(){
+
+    public String getUsername() {
         return username;
     }
-    public void setUsername(String username){
+
+    public void setUsername(String username) {
         this.username = username;
     }
-    public String getPassword(){
+
+    public String getPassword() {
         return password;
     }
-    public void setPassword (String password){
+
+    public void setPassword(String password) {
         this.password = password;
     }
-    public String getRole(){
+
+    public String getRole() {
         return role;
     }
-    public void setRole(String role){
+
+    public void setRole(String role) {
         this.role = role;
     }
+
     @Override
-    public String toString(){
+    public String toString() {
         return "User { " +
-                "userId = " +  userId +
-                ", username =' "  + username + '\'' +
+                "userId = " + userId +
+                ", username =' " + username + '\'' +
                 ", role =' " + role + '\'' +
                 '}';
     }
