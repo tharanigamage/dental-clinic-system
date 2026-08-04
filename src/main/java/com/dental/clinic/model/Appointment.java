@@ -12,64 +12,82 @@ public class Appointment {
     private LocalTime appointmentTime;
     private String status;
 
-    public Appointment () {
+    //default constructor
+    public Appointment() {
     }
-    public Appointment (String appointmentNumber, Patient patient, Dentist dentist, TreatmentType treatmentType, LocalTime appointmentTime, LocalDate appointmentDate, String status){
-        this.appointmentNumber= appointmentNumber;
+
+    //constructor
+    public Appointment(String appointmentNumber, Patient patient, Dentist dentist, TreatmentType treatmentType, LocalTime appointmentTime, LocalDate appointmentDate, String status) {
+        this.appointmentNumber = appointmentNumber;
         this.patient = patient;
+        this.dentist = dentist;
         this.treatmentType = treatmentType;
         this.appointmentDate = appointmentDate;
         this.appointmentTime = appointmentTime;
         this.status = status;
     }
-    public String getAppointmentNumber(){
+
+    public String getAppointmentNumber() {
         return appointmentNumber;
     }
-    public void setAppointmentNumber (String appointmentNumber){
+
+    public void setAppointmentNumber(String appointmentNumber) {
         this.appointmentNumber = appointmentNumber;
     }
-    public Patient getPatient(){
+
+    public Patient getPatient() {
         return patient;
     }
-    public void setPatient(Patient patient){
+
+    public void setPatient(Patient patient) {
         this.patient = patient;
     }
-    public Dentist getDentist(){
+
+    public Dentist getDentist() {
         return dentist;
     }
-    public void setDentist (Dentist dentist){
+
+    public void setDentist(Dentist dentist) {
         this.dentist = dentist;
     }
-    public TreatmentType getTreatmentType(){
+
+    public TreatmentType getTreatmentType() {
         return treatmentType;
     }
-    public void setTreatmentType(TreatmentType treatmentType){
+
+    public void setTreatmentType(TreatmentType treatmentType) {
         this.treatmentType = treatmentType;
     }
-    public LocalDate getAppointmentDate(){
+
+    public LocalDate getAppointmentDate() {
         return appointmentDate;
     }
-    public void setAppointmentDate(LocalDate appointmentDate){
+
+    public void setAppointmentDate(LocalDate appointmentDate) {
         this.appointmentDate = appointmentDate;
     }
-    public LocalTime getAppointmentTime(){
+
+    public LocalTime getAppointmentTime() {
         return appointmentTime;
     }
-    public void setAppointmentTime(LocalTime appointmentTime){
+
+    public void setAppointmentTime(LocalTime appointmentTime) {
         this.appointmentTime = appointmentTime;
     }
-    public String getStatus(){
+
+    public String getStatus() {
         return status;
     }
-    public void setStatus (String status){
+
+    public void setStatus(String status) {
         this.status = status;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "Appointment { " +
-                "appointmentNumber = " +  appointmentNumber + '\'' +
-                ", patient =' "  + patient +
+                "appointmentNumber = " + appointmentNumber + '\'' +
+                ", patient =' " + patient +
                 ", dentist =' " + dentist +
                 ", treatmentType =' " + treatmentType +
                 ", appointmentDate =' " + appointmentDate +

@@ -6,44 +6,53 @@ public class Dentist {
     private String specialization;
     private double consultationFee;
 
-    public Dentist () {
+    public Dentist() {
     }
-    public Dentist (int dentistId, String name, String specialization, double consultationFee){
-        this.dentistId= dentistId;
+
+    public Dentist(int dentistId, String name, String specialization, double consultationFee) {
+        this.dentistId = dentistId;
         this.name = name;
         this.specialization = specialization;
         this.consultationFee = consultationFee;
     }
-    public int getDentistId(){
+
+    public int getDentistId() {
         return dentistId;
     }
-    public void setDentistId (int dentistId){
+
+    public void setDentistId(int dentistId) {
         this.dentistId = dentistId;
     }
-    public String getName(){
+
+    public String getName() {
         return name;
     }
-    public void setName(String name){
+
+    public void setName(String name) {
         this.name = name;
     }
-    public String getSpecialization(){
+
+    public String getSpecialization() {
         return specialization;
     }
-    public void setSpecialization (String specialization){
+
+    public void setSpecialization(String specialization) {
         this.specialization = specialization;
     }
-    public double getConsultationFee(){
+
+    public double getConsultationFee() {
         return consultationFee;
     }
-    public void setConsultationFee(double consultationFee){
+
+    public void setConsultationFee(double consultationFee) {
         this.consultationFee = consultationFee;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "Dentist { " +
-                "dentistId = " +  dentistId +
-                ", name =' "  + name + '\'' +
+                "dentistId = " + dentistId +
+                ", name =' " + name + '\'' +
                 ", specialization =' " + specialization + '\'' +
                 ", consultationFee =' " + consultationFee +
                 '}';

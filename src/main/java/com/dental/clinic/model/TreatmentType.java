@@ -5,37 +5,44 @@ public class TreatmentType {
     private String treatmentName;
     private double cost;
 
-    public TreatmentType () {
+    public TreatmentType() {
     }
-    public TreatmentType (int treatmentId, String treatmentName, double cost){
-        this.treatmentId= treatmentId;
+
+    public TreatmentType(int treatmentId, String treatmentName, double cost) {
+        this.treatmentId = treatmentId;
         this.treatmentName = treatmentName;
         this.cost = cost;
     }
-    public int getTreatmentId(){
+
+    public int getTreatmentId() {
         return treatmentId;
     }
-    public void setTreatmentId (int treatmentId){
+
+    public void setTreatmentId(int treatmentId) {
         this.treatmentId = treatmentId;
     }
-    public String getTreatmentName(){
+
+    public String getTreatmentName() {
         return treatmentName;
     }
-    public void setTreatmentName(String treatmentName){
+
+    public void setTreatmentName(String treatmentName) {
         this.treatmentName = treatmentName;
     }
-    public double getCost(){
+
+    public double getCost() {
         return cost;
     }
-    public void setCost (double cost){
+
+    public void setCost(double cost) {
         this.cost = cost;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "TreatmentType { " +
-                "treatmentId = " +  treatmentId +
-                ", treatmentName =' "  + treatmentName + '\'' +
+                "treatmentId = " + treatmentId +
+                ", treatmentName =' " + treatmentName + '\'' +
                 ", cost =' " + cost +
                 '}';
     }
