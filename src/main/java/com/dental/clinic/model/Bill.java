@@ -1,7 +1,6 @@
 package com.dental.clinic.model;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class Bill {
     private String billId;
@@ -11,58 +10,71 @@ public class Bill {
     private double totalAmount;
     private LocalDate billDate;
 
-    public Bill () {
+    public Bill() {
     }
-    public Bill (String billId, Appointment appointment, double consultationFee, double treatmentCost, double totalAmount, LocalDate billDate){
-        this.billId= billId;
+
+    public Bill(String billId, Appointment appointment, double consultationFee, double treatmentCost, double totalAmount, LocalDate billDate) {
+        this.billId = billId;
         this.appointment = appointment;
         this.consultationFee = consultationFee;
         this.treatmentCost = treatmentCost;
         this.totalAmount = totalAmount;
         this.billDate = billDate;
     }
-    public String getBillId(){
+
+    public String getBillId() {
         return billId;
     }
-    public void setBillId (String appointmentNumber){
+
+    public void setBillId(String billId) {
         this.billId = billId;
     }
-    public Appointment getAppointment(){
+
+    public Appointment getAppointment() {
         return appointment;
     }
-    public void setAppointment(Appointment appointment){
+
+    public void setAppointment(Appointment appointment) {
         this.appointment = appointment;
     }
-    public double getConsultationFee(){
+
+    public double getConsultationFee() {
         return consultationFee;
     }
-    public void setConsultationFee (double consultationFee){
+
+    public void setConsultationFee(double consultationFee) {
         this.consultationFee = consultationFee;
     }
-    public double getTreatmentCost(){
+
+    public double getTreatmentCost() {
         return treatmentCost;
     }
-    public void setTreatmentCost(double treatmentCost){
+
+    public void setTreatmentCost(double treatmentCost) {
         this.treatmentCost = treatmentCost;
     }
-    public double getTotalAmount(){
+
+    public double getTotalAmount() {
         return totalAmount;
     }
-    public void setTotalAmount(double totalAmount){
+
+    public void setTotalAmount(double totalAmount) {
         this.totalAmount = totalAmount;
     }
-    public LocalDate getBillDate(){
+
+    public LocalDate getBillDate() {
         return billDate;
     }
-    public void setBillDate(LocalDate billDate){
+
+    public void setBillDate(LocalDate billDate) {
         this.billDate = billDate;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "Bill { " +
-                "billId = " +  billId + '\'' +
-                ", appointment =' "  + appointment.getAppointmentNumber() +
+                "billId = " + billId + '\'' +
+                ", appointment =' " + appointment.getAppointmentNumber() +
                 ", consultationFee =' " + consultationFee +
                 ", treatmentCost =' " + treatmentCost +
                 ", totalAmount =' " + totalAmount +
