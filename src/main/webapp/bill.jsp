@@ -5,8 +5,8 @@
 <head>
     <title>Bill - Sunrise Dental Clinic</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/css/custom.css" rel="stylesheet">
     <style>
+        /* Hide the sidebar and buttons when printing - only the receipt should print */
         @media print {
             .no-print { display: none !important; }
         }

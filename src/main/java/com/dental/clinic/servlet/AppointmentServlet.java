@@ -40,7 +40,7 @@ public class AppointmentServlet extends HttpServlet {
         request.setAttribute("dentists", dentists);
         request.setAttribute("treatmentTypes", treatmentTypes);
 
-        request.getRequestDispatcher("/appointments.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/appointments.jsp").forward(request, response);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class AppointmentServlet extends HttpServlet {
                 request.setAttribute("appointments", appointmentService.getAllAppointments());
                 request.setAttribute("dentists", appointmentService.getAllDentists());
                 request.setAttribute("treatmentTypes", appointmentService.getAllTreatmentTypes());
-                request.getRequestDispatcher("/appointments.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/views/appointments.jsp").forward(request,response);
             }
 
         }
