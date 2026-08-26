@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDAOImpl implements UserDAO {
 
@@ -27,6 +29,84 @@ public class UserDAOImpl implements UserDAO {
             throw new RuntimeException("Failed to find user", e);
         }
         return null;
+    }
+
+    @Override
+    public User findById(int userId) {
+        String sql = "SELECT * FROM users WHERE user_id = ?";
+        Connection conn = DBConnection.getInstance().getConnection();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return mapRow(rs);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to find user", e);
+        }
+        return null;
+    }
+
+    @Override
+    public List<User> findAll() {
+        String sql = "SELECT * FROM users ORDER BY username";
+        List<User> users = new ArrayList<>();
+        Connection conn = DBConnection.getInstance().getConnection();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                users.add(mapRow(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to fetch users", e);
+        }
+        return users;
+    }
+
+    @Override
+    public void save(User user) {
+        String sql = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
+        Connection conn = DBConnection.getInstance().getConnection();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, user.getUsername());
+            stmt.setString(2, user.getPassword());
+            stmt.setString(3, user.getRole());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to save user", e);
+        }
+    }
+
+    @Override
+    public void update(User user) {
+        String sql = "UPDATE users SET username = ?, password = ?, role = ? WHERE user_id = ?";
+        Connection conn = DBConnection.getInstance().getConnection();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, user.getUsername());
+            stmt.setString(2, user.getPassword());
+            stmt.setString(3, user.getRole());
+            stmt.setInt(4, user.getUserId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to update user", e);
+        }
+    }
+
+    @Override
+    public void delete(int userId) {
+        String sql = "DELETE FROM users WHERE user_id = ?";
+        Connection conn = DBConnection.getInstance().getConnection();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to delete user", e);
+        }
     }
 
     private User mapRow(ResultSet rs) throws SQLException {

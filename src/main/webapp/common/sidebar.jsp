@@ -10,10 +10,10 @@
     <span class="fs-5 fw-bold mb-3">Sunrise Dental Clinic</span>
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
-        <li class="nav-item">
-            <a href="${pageContext.request.contextPath}/home"
-               class="nav-link <%= currentPage.equals("home") ? "active" : "text-white" %>">
-                Home
+        <li>
+            <a href="${pageContext.request.contextPath}/dashboard"
+                class="nav-link <%= currentPage.equals("dashboard") ? "active" : "text-white" %>">
+                Dashboard
             </a>
         </li>
         <li>
@@ -48,6 +48,7 @@
         <span class="d-flex align-items-center text-white text-decoration-none">
             <span><%= loggedInUser != null ? loggedInUser.getUsername() : "" %> <small class="text-muted">(<%= role %>)</small></span>
         </span>
+        <a href="${pageContext.request.contextPath}/myAccount" class="btn btn-outline-light btn-sm mt-2 w-100">My Account</a>
         <a href="${pageContext.request.contextPath}/logout" class="btn btn-outline-light btn-sm mt-2 w-100">Logout</a>
     </div>
 </div>

@@ -20,7 +20,7 @@ public class LoginServlet extends HttpServlet {
     protected void doGet (HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException{
 
-        request.getRequestDispatcher("WEB-INF/views/login.jsp").forward(request,response);
+        request.getRequestDispatcher("/login.jsp").forward(request, response);
     }
 
     protected void doPost (HttpServletRequest request, HttpServletResponse response)
@@ -34,11 +34,11 @@ public class LoginServlet extends HttpServlet {
         if (user != null){
             HttpSession session = request.getSession();
             session.setAttribute("loggedInUser", user);
-            response.sendRedirect(request.getContextPath()+"/home");
+            response.sendRedirect(request.getContextPath()+"/dashboard");
         }
         else {
             request.setAttribute("errorMessage", "Invalid username or password.");
-            request.getRequestDispatcher("WEB-INF/views/login.jsp").forward(request,response);
+            request.getRequestDispatcher("/login.jsp").forward(request, response);
         }
     }
 
