@@ -15,6 +15,8 @@ public interface AppointmentDAO {
 
     void updateStatus (String appointmentNumber, String status);
 
+    void updateAppointment(String appointmentNumber, LocalDate date, LocalTime time, String status);
+
     int countAll();
 
     boolean existsByDentistDateTime (int dentistId, LocalDate date, LocalTime time);

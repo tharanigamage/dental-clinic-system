@@ -106,8 +106,35 @@ public class AppointmentServiceImpl implements AppointmentService{
     }
 
     @Override
-    public void updateAppointmentStatus (String appointmentNumber, String status){
-        appointmentDAO.updateStatus(appointmentNumber,status);
+    public void updateAppointment(String appointmentNumber, LocalDate date, LocalTime time, String status) {
+
+        if (date == null || time == null) {
+            throw new IllegalArgumentException("Please enter a valid date and time.");
+        }
+        if (!ValidationUtil.isFutureOrTodayDate(date)) {
+            throw new IllegalArgumentException("Appointment date cannot be in the past.");
+        }
+        if (!"Pending".equals(status) && !"Completed".equals(status) && !"Cancelled".equals(status)) {
+            throw new IllegalArgumentException("Invalid status value.");
+        }
+
+        Appointment existing = appointmentDAO.findByAppointmentNumber(appointmentNumber);
+        if (existing == null) {
+            throw new IllegalArgumentException("Appointment not found: " + appointmentNumber);
+        }
+
+
+        boolean dateTimeChanged = !existing.getAppointmentDate().equals(date) || !existing.getAppointmentTime().equals(time);
+        if (dateTimeChanged && appointmentDAO.existsByDentistDateTime(existing.getDentist().getDentistId(), date, time)) {
+            throw new IllegalArgumentException("This dentist already has another appointment at that date and time.");
+        }
+
+        appointmentDAO.updateAppointment(appointmentNumber, date, time, status);
+    }
+
+    @Override
+    public void updateAppointmentStatus(String appointmentNumber, String status) {
+        appointmentDAO.updateStatus(appointmentNumber, status);
     }
 
     @Override
