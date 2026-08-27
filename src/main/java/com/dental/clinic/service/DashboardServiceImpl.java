@@ -3,6 +3,9 @@ package com.dental.clinic.service;
 import com.dental.clinic.dao.DashboardDAO;
 import com.dental.clinic.dao.DashboardDAOImpl;
 
+import java.util.Map;
+import java.util.List;
+
 public class DashboardServiceImpl implements DashboardService{
 
     private final DashboardDAO dashboardDAO;
@@ -48,6 +51,21 @@ public class DashboardServiceImpl implements DashboardService{
     @Override
     public String getMostBookedTreatment() {
         return dashboardDAO.findMostBookedTreatmentName();
+    }
+
+    @Override
+    public Map<String, Double> getMonthlyRevenueTrend(int monthsBack) {
+        return dashboardDAO.getMonthlyRevenueTrend(monthsBack);
+    }
+
+    @Override
+    public List<Double> getDailyRevenueThisMonth() {
+        return dashboardDAO.getDailyRevenueThisMonth();
+    }
+
+    @Override
+    public Map<String, Integer> getTopTreatments(int limit) {
+        return dashboardDAO.getTopTreatments(limit);
     }
 
 }
