@@ -19,6 +19,8 @@ public interface AppointmentService {
 
     void updateAppointmentStatus (String appointmentNumber, String status);
 
+    void updateAppointment(String appointmentNumber, LocalDate date, LocalTime time, String status);
+
     List<Dentist> getAllDentists ();
 
     List<TreatmentType> getAllTreatmentTypes();

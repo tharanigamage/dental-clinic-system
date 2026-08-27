@@ -96,6 +96,23 @@ public class AppointmentDAOImpl implements AppointmentDAO{
     }
 
     @Override
+    public void updateAppointment(String appointmentNumber, LocalDate date, LocalTime time, String status) {
+        String sql = "UPDATE appointments SET appointment_date = ?, appointment_time = ?, status = ? " +
+                "WHERE appointment_number = ?";
+        Connection conn = DBConnection.getInstance().getConnection();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setDate(1, Date.valueOf(date));
+            stmt.setTime(2, Time.valueOf(time));
+            stmt.setString(3, status);
+            stmt.setString(4, appointmentNumber);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to update appointment", e);
+        }
+    }
+
+    @Override
     public int countAll(){
         String sql = "SELECT COUNT(*) FROM appointments";
         Connection conn = DBConnection.getInstance().getConnection();
