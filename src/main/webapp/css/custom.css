@@ -8,15 +8,29 @@
     --clinic-bg: #f4f7f8;
 }
 
-body {
+html, body {
     background-color: var(--clinic-bg);
     font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
+    height: 100%;
+    overflow: hidden;
 }
 
-/*Sidebar*/
 .d-flex.flex-column.flex-shrink-0.bg-dark {
     background-color: var(--clinic-sidebar-bg) !important;
     box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    display: flex;
+}
+
+.flex-grow-1.p-4 {
+    margin-left: 240px;
+    width: calc(100% - 240px);
+    height: 100vh;
+    overflow-y: auto;
+    box-sizing: border-box;
 }
 .nav-pills .nav-link.active {
     background-color: var(--clinic-sidebar-active) !important;
