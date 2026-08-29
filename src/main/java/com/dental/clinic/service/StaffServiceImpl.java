@@ -67,6 +67,11 @@ public class StaffServiceImpl implements StaffService{
             throw new IllegalArgumentException("Role must be either Admin or Receptionist.");
         }
 
+        boolean isDemotingAdmin = "Admin".equals(existingUser.getRole()) && !"Admin".equals(role);
+        if (isDemotingAdmin && userDAO.countByRole("Admin") <= 1) {
+            throw new IllegalArgumentException("Cannot change the role of the last remaining Admin account.");
+        }
+
         User accountWithSameUsername = userDAO.findByUsername(username.trim());
         if (accountWithSameUsername != null && accountWithSameUsername.getUserId() != userId) {
             throw new IllegalArgumentException("This username is already taken. Please choose another.");

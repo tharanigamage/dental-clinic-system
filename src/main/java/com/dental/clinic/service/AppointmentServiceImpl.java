@@ -9,6 +9,7 @@ import com.dental.clinic.util.ValidationUtil;
 
 import java.time.LocalTime;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AppointmentServiceImpl implements AppointmentService{
@@ -34,8 +35,12 @@ public class AppointmentServiceImpl implements AppointmentService{
     }
 
     @Override
-    public Appointment registerAppointment (String patientName, String address, String contactNumber,
-                                            int dentistId, int treatmentId, LocalDate date, LocalTime time){
+    public Appointment registerAppointment(String nic, String patientName, String address, String contactNumber,
+                                           int dentistId, List<Integer> treatmentIds, LocalDate date, LocalTime time){
+
+        if (ValidationUtil.isNullorBlank(nic)){
+            throw new IllegalArgumentException("Please enter the patient's NIC.");
+        }
 
         if (!ValidationUtil.isValidName(patientName)){
             throw new IllegalArgumentException("Please enter a valid patient name (letters only, at least 2 characters).");
@@ -53,8 +58,8 @@ public class AppointmentServiceImpl implements AppointmentService{
             throw new IllegalArgumentException("Please select a dentist.");
         }
 
-        if (!ValidationUtil.isPositiveId(treatmentId)){
-            throw new IllegalArgumentException("Please select a treatment type.");
+        if (treatmentIds == null || treatmentIds.isEmpty()){
+            throw new IllegalArgumentException("Please select at least one treatment type.");
         }
 
         if (date == null || time == null){
@@ -69,15 +74,26 @@ public class AppointmentServiceImpl implements AppointmentService{
             throw new IllegalArgumentException("This dentist already has an appointment at that date and time. Please choose a different slot.");
         }
 
-        Patient patient = new Patient();
-        patient.setName(patientName.trim());
-        patient.setAddress(address.trim());
-        patient.setContactNumber(contactNumber.trim());
-        int patientId = patientDAO.save(patient);
-        patient.setPatientId(patientId);
+        Patient patient = patientDAO.findByNic(nic.trim());
+        if (patient == null) {
+            patient = new Patient();
+            patient.setNic(nic.trim());
+            patient.setName(patientName.trim());
+            patient.setAddress(address.trim());
+            patient.setContactNumber(contactNumber.trim());
+            int patientId = patientDAO.save(patient);
+            patient.setPatientId(patientId);
+        }
 
         Dentist dentist = dentistDAO.findById(dentistId);
-        TreatmentType treatmentType = treatmentTypeDAO.findById(treatmentId);
+
+        List<TreatmentType> treatmentTypes = new ArrayList<>();
+        for (int treatmentId : treatmentIds) {
+            TreatmentType t = treatmentTypeDAO.findById(treatmentId);
+            if (t != null) {
+                treatmentTypes.add(t);
+            }
+        }
 
         String appointmentNumber = generateAppointmentNumber();
 
@@ -85,7 +101,7 @@ public class AppointmentServiceImpl implements AppointmentService{
         appointment.setAppointmentNumber(appointmentNumber);
         appointment.setPatient(patient);
         appointment.setDentist(dentist);
-        appointment.setTreatmentType(treatmentType);
+        appointment.setTreatmentTypes(treatmentTypes);
         appointment.setAppointmentDate(date);
         appointment.setAppointmentTime(time);
         appointment.setStatus("Pending");

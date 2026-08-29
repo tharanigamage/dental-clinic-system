@@ -109,6 +109,23 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    @Override
+    public int countByRole(String role) {
+        String sql = "SELECT COUNT(*) FROM users WHERE role = ?";
+        Connection conn = DBConnection.getInstance().getConnection();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, role);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to count users by role", e);
+        }
+        return 0;
+    }
+
     private User mapRow(ResultSet rs) throws SQLException {
         User user = new User();
         user.setUserId(rs.getInt("user_Id"));

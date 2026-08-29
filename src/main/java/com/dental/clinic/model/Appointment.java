@@ -2,12 +2,13 @@ package com.dental.clinic.model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 public class Appointment {
     private String appointmentNumber;
     private Patient patient;
     private Dentist dentist;
-    private TreatmentType treatmentType;
+    private List<TreatmentType> treatmentTypes;
     private LocalDate appointmentDate;
     private LocalTime appointmentTime;
     private String status;
@@ -17,11 +18,11 @@ public class Appointment {
     }
 
     //constructor
-    public Appointment(String appointmentNumber, Patient patient, Dentist dentist, TreatmentType treatmentType, LocalTime appointmentTime, LocalDate appointmentDate, String status) {
+    public Appointment(String appointmentNumber, Patient patient, Dentist dentist, List<TreatmentType> treatmentTypes, LocalTime appointmentTime, LocalDate appointmentDate, String status) {
         this.appointmentNumber = appointmentNumber;
         this.patient = patient;
         this.dentist = dentist;
-        this.treatmentType = treatmentType;
+        this.treatmentTypes = treatmentTypes;
         this.appointmentDate = appointmentDate;
         this.appointmentTime = appointmentTime;
         this.status = status;
@@ -51,13 +52,36 @@ public class Appointment {
         this.dentist = dentist;
     }
 
-    public TreatmentType getTreatmentType() {
-        return treatmentType;
+    public List<TreatmentType> getTreatmentTypes() {
+        return treatmentTypes;
     }
 
-    public void setTreatmentType(TreatmentType treatmentType) {
-        this.treatmentType = treatmentType;
+    public void setTreatmentTypes(List<TreatmentType> treatmentTypes) {
+        this.treatmentTypes = treatmentTypes;
     }
+
+    public double getTotalTreatmentCost() {
+        double total = 0;
+        if (treatmentTypes != null) {
+            for (TreatmentType t : treatmentTypes) {
+                total += t.getCost();
+            }
+        }
+        return total;
+    }
+
+    public String getTreatmentNamesDisplay() {
+        if (treatmentTypes == null || treatmentTypes.isEmpty()) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < treatmentTypes.size(); i++) {
+            if (i > 0) sb.append(", ");
+            sb.append(treatmentTypes.get(i).getTreatmentName());
+        }
+        return sb.toString();
+    }
+
 
     public LocalDate getAppointmentDate() {
         return appointmentDate;
@@ -89,7 +113,7 @@ public class Appointment {
                 "appointmentNumber = " + appointmentNumber + '\'' +
                 ", patient =' " + patient +
                 ", dentist =' " + dentist +
-                ", treatmentType =' " + treatmentType +
+                ", treatmentTypes =' " + treatmentTypes +
                 ", appointmentDate =' " + appointmentDate +
                 ", appointmentTime =' " + appointmentTime +
                 ", status =' " + status + '\'' +

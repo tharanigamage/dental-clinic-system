@@ -37,8 +37,12 @@ public class BillingServiceImpl implements  BillingService{
             throw new IllegalArgumentException("No appointment found with number: " + appointmentNumber);
         }
 
+        if ("Cancelled".equals(appointment.getStatus())) {
+            throw new IllegalArgumentException("Cannot generate a bill for a cancelled appointment.");
+        }
+
         double consultationFee = appointment.getDentist().getConsultationFee();
-        double treatmentCost = appointment.getTreatmentType().getCost();
+        double treatmentCost = appointment.getTotalTreatmentCost();
         double totalAmount = consultationFee + treatmentCost;
 
         Bill bill = new Bill();
@@ -50,6 +54,10 @@ public class BillingServiceImpl implements  BillingService{
         bill.setBillDate(LocalDate.now());
 
         billDAO.save(bill);
+
+        if (!"Completed".equals(appointment.getStatus())) {
+            appointmentDAO.updateStatus(appointmentNumber, "Completed");
+        }
 
         return bill;
     }

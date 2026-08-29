@@ -97,7 +97,7 @@
                             <td><%= a.getAppointmentTime() %></td>
                             <td><%= a.getPatient().getName() %></td>
                             <td><%= a.getDentist().getName() %></td>
-                            <td><%= a.getTreatmentType().getTreatmentName() %></td>
+                            <td><%= a.getTreatmentNamesDisplay() %></td>
                             <td><%= a.getStatus() %></td>
                         </tr>
                         <% } %>
@@ -169,7 +169,7 @@
                             <td><%= b.getBillId() %></td>
                             <td><%= b.getBillDate() %></td>
                             <td><%= b.getAppointment().getPatient().getName() %></td>
-                            <td><%= b.getAppointment().getTreatmentType().getTreatmentName() %></td>
+                            <td><%= b.getAppointment().getTreatmentNamesDisplay() %></td>
                             <td class="text-end"><%= String.format("%.2f", b.getConsultationFee()) %></td>
                             <td class="text-end"><%= String.format("%.2f", b.getTreatmentCost()) %></td>
                             <td class="text-end"><%= String.format("%.2f", b.getTotalAmount()) %></td>
@@ -258,7 +258,7 @@
                             <td><%= a.getAppointmentDate() %></td>
                             <td><%= a.getAppointmentTime() %></td>
                             <td><%= a.getPatient().getName() %></td>
-                            <td><%= a.getTreatmentType().getTreatmentName() %></td>
+                            <td><%= a.getTreatmentNamesDisplay() %></td>
                             <td><%= a.getStatus() %></td>
                         </tr>
                         <% } %>

@@ -16,4 +16,6 @@ public interface UserDAO {
     void update(User user);
 
     void delete(int userId);
+
+    int countByRole(String role);
 }

@@ -60,11 +60,14 @@ public class ReportDAOImpl implements ReportDAO{
         treatmentType.setTreatmentName(rs.getString("treatment_name"));
         treatmentType.setCost(rs.getDouble("treatment_cost"));
 
+        List<TreatmentType> treatmentTypes = new ArrayList<>();
+        treatmentTypes.add(treatmentType);
+
         Appointment appointment = new Appointment();
         appointment.setAppointmentNumber(rs.getString("appointment_number"));
         appointment.setPatient(patient);
         appointment.setDentist(dentist);
-        appointment.setTreatmentType(treatmentType);
+        appointment.setTreatmentTypes(treatmentTypes);
         appointment.setAppointmentDate(rs.getDate("appointment_date").toLocalDate());
         appointment.setAppointmentTime(rs.getTime("appointment_time").toLocalTime());
         appointment.setStatus(rs.getString("status"));
@@ -121,11 +124,14 @@ public class ReportDAOImpl implements ReportDAO{
         treatmentType.setTreatmentName(rs.getString("treatment_name"));
         treatmentType.setCost(rs.getDouble("treatment_cost"));
 
+        List<TreatmentType> treatmentTypes = new ArrayList<>();
+        treatmentTypes.add(treatmentType);
+
         Appointment appointment = new Appointment();
         appointment.setAppointmentNumber(rs.getString("appointment_number"));
         appointment.setPatient(patient);
         appointment.setDentist(dentist);
-        appointment.setTreatmentType(treatmentType);
+        appointment.setTreatmentTypes(treatmentTypes);
         appointment.setAppointmentDate(rs.getDate("appointment_date").toLocalDate());
         appointment.setAppointmentTime(rs.getTime("appointment_time").toLocalTime());
         appointment.setStatus(rs.getString("status"));
