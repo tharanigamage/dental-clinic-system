@@ -16,7 +16,6 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalTime;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/appointments")
@@ -41,7 +40,7 @@ public class AppointmentServlet extends HttpServlet {
         request.setAttribute("dentists", dentists);
         request.setAttribute("treatmentTypes", treatmentTypes);
 
-        request.getRequestDispatcher("/appointments.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/appointments.jsp").forward(request, response);
     }
 
     @Override
@@ -61,64 +60,36 @@ public class AppointmentServlet extends HttpServlet {
             handleUpdateStatus(request);
             response.sendRedirect(request.getContextPath() + "/appointments");
         }
-        else if ("edit".equals(action)){
-            handleEdit(request, response);
-        }
     }
 
-    private void handleRegister(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    private void handleRegister (HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
 
-        String nic = request.getParameter("nic");
+
         String name = request.getParameter("name");
         String address = request.getParameter("address");
         String contactNumber = request.getParameter("contactNumber");
         LocalDate date = ValidationUtil.parseDateSafely(request.getParameter("appointmentDate"));
         LocalTime time = ValidationUtil.parseTimeSafely(request.getParameter("appointmentTime"));
 
-        int dentistId = parseIdSafely(request.getParameter("dentistId"));
+            int dentistId = parseIdSafely(request.getParameter("dentistId"));
+            int treatmentId = parseIdSafely(request.getParameter("treatmentId"));
 
-        String[] treatmentIdStrings = request.getParameterValues("treatmentIds");
-        List<Integer> treatmentIds = new ArrayList<>();
-        if (treatmentIdStrings != null) {
-            for (String idStr : treatmentIdStrings) {
-                treatmentIds.add(parseIdSafely(idStr));
+            try {
+                appointmentService.registerAppointment(name, address, contactNumber, dentistId, treatmentId, date, time);
+                response.sendRedirect(request.getContextPath()+ "/appointments");
             }
+            catch (IllegalArgumentException e){
+                request.setAttribute("errorMessage", e.getMessage());
+                request.setAttribute("appointments", appointmentService.getAllAppointments());
+                request.setAttribute("dentists", appointmentService.getAllDentists());
+                request.setAttribute("treatmentTypes", appointmentService.getAllTreatmentTypes());
+                request.getRequestDispatcher("/WEB-INF/views/appointments.jsp").forward(request,response);
+            }
+
         }
 
-        try {
-            appointmentService.registerAppointment(nic, name, address, contactNumber, dentistId, treatmentIds, date, time);
-            response.sendRedirect(request.getContextPath() + "/appointments");
-        } catch (IllegalArgumentException e) {
-            request.setAttribute("errorMessage", e.getMessage());
-            request.setAttribute("appointments", appointmentService.getAllAppointments());
-            request.setAttribute("dentists", appointmentService.getAllDentists());
-            request.setAttribute("treatmentTypes", appointmentService.getAllTreatmentTypes());
-            request.getRequestDispatcher("/appointments.jsp").forward(request, response);
-        }
-    }
-
-    private void handleEdit(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        String appointmentNumber = request.getParameter("appointmentNumber");
-        LocalDate date = ValidationUtil.parseDateSafely(request.getParameter("appointmentDate"));
-        LocalTime time = ValidationUtil.parseTimeSafely(request.getParameter("appointmentTime"));
-        String status = request.getParameter("status");
-
-        try {
-            appointmentService.updateAppointment(appointmentNumber, date, time, status);
-            response.sendRedirect(request.getContextPath() + "/appointments");
-        } catch (IllegalArgumentException e) {
-            request.setAttribute("errorMessage", e.getMessage());
-            request.setAttribute("appointments", appointmentService.getAllAppointments());
-            request.setAttribute("dentists", appointmentService.getAllDentists());
-            request.setAttribute("treatmentTypes", appointmentService.getAllTreatmentTypes());
-            request.getRequestDispatcher("/appointments.jsp").forward(request, response);
-        }
-    }
-
-    private int parseIdSafely (String value){
+        private int parseIdSafely (String value){
         try {
             return Integer.parseInt(value);
         }
