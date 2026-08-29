@@ -76,7 +76,7 @@ public class ManageStaffServlet extends HttpServlet{
 
         int userId = Integer.parseInt(request.getParameter("userId"));
         String username = request.getParameter("username");
-        String password = request.getParameter("password");   // may be blank - means "keep existing"
+        String password = request.getParameter("password");
         String role = request.getParameter("role");
 
         try {

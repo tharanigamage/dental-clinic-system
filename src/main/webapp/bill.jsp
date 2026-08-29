@@ -9,6 +9,100 @@
     <style>
         @media print {
             .no-print { display: none !important; }
+
+            @page {
+                size: A4 portrait;
+                margin: 15mm;
+            }
+
+            html, body {
+                width: 210mm;
+                height: auto;
+                overflow: visible;
+                background: #ffffff !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            /* Kill the gray background + min-height that was leaving a gray box */
+            .flex-grow-1.p-4 {
+                margin-left: 0 !important;
+                width: 100% !important;
+                height: auto !important;
+                min-height: 0 !important;
+                overflow: visible !important;
+                padding: 0 !important;
+                display: block !important;
+                background-color: #ffffff !important;
+            }
+
+            .card {
+                box-shadow: none !important;
+                border: none !important;
+                max-width: 100% !important;
+                width: 100% !important;
+                margin: 0 auto !important;
+                background-color: #ffffff !important;
+            }
+
+            .card-body {
+                padding: 0 !important;
+                background-color: #ffffff !important;
+            }
+
+            /* ---- Info table (Bill No, Date, Patient...) ---- */
+            .card table {
+                width: 100% !important;
+                table-layout: fixed !important;
+                border-collapse: collapse !important;
+            }
+
+            .card table:first-of-type th {
+                width: 35% !important;
+                text-align: left !important;
+                font-weight: 600 !important;
+                padding: 4px 8px 4px 0 !important;
+                vertical-align: top !important;
+                border: none !important;
+            }
+
+            .card table:first-of-type td {
+                width: 65% !important;
+                text-align: right !important;   /* set to left if you want values on the left instead */
+                padding: 4px 0 !important;
+                vertical-align: top !important;
+                border: none !important;
+            }
+
+            .card table:first-of-type tr {
+                border-bottom: 1px dotted #ccc !important;
+            }
+
+            /* ---- Totals table ---- */
+            .card table:last-of-type td:first-child {
+                width: 65% !important;
+                text-align: left !important;
+                padding: 4px 0 !important;
+                border: none !important;
+            }
+
+            .card table:last-of-type td.text-end {
+                width: 35% !important;
+                text-align: right !important;
+                padding: 4px 0 !important;
+                border: none !important;
+                white-space: nowrap !important;
+            }
+
+            .card table:last-of-type tr.fw-bold td {
+                border-top: 1px solid #333 !important;
+                padding-top: 6px !important;
+            }
+
+            tr {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
         }
     </style>
 </head>
@@ -19,7 +113,7 @@
         <jsp:include page="common/sidebar.jsp" />
     </div>
 
-    <div class="flex-grow-1 p-4 bg-light" style="min-height: 100vh;">
+    <div class="flex-grow-1 p-4 bg-light d-flex justify-content-center" style="min-height: 100vh; ">
 
         <%
 
@@ -33,7 +127,7 @@
         <% } %>
 
         <% if (bill != null) { %>
-        <div class="card mx-auto" style="max-width: 600px;">
+        <div class="card" style="max-width: 600px; width: 100%;">
             <div class="card-body">
 
                  <div class="text-center mb-4">
@@ -50,7 +144,7 @@
                        <tr><th>Patient Name</th><td><%= bill.getAppointment().getPatient().getName() %></td></tr>
                        <tr><th>Contact Number</th><td><%= bill.getAppointment().getPatient().getContactNumber() %></td></tr>
                        <tr><th>Dentist</th><td><%= bill.getAppointment().getDentist().getName() %></td></tr>
-                       <tr><th>Treatment</th><td><%= bill.getAppointment().getTreatmentType().getTreatmentName() %></td></tr>
+                       <tr><th>Treatment</th><td><%= bill.getAppointment().getTreatmentNamesDisplay() %></td></tr>
                  </table>
 
                  <hr>
@@ -82,7 +176,6 @@
          </div>
         <% } %>
     </div>
-</div>
 </body>
 </html>
 

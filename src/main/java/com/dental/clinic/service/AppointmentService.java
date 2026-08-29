@@ -10,8 +10,8 @@ import java.util.List;
 
 public interface AppointmentService {
 
-    Appointment registerAppointment(String patientName, String address, String contactNumber,
-                                    int dentistId, int treatmentId, LocalDate date, LocalTime time);
+    Appointment registerAppointment(String nic, String patientName, String address, String contactNumber,
+                                    int dentistId, List<Integer> treatmentIds, LocalDate date, LocalTime time);
 
     Appointment searchAppointment(String appointmentNumber);
 

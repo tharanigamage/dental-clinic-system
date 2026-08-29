@@ -94,7 +94,7 @@ public class BillDAOImpl implements BillDAO{
                 "JOIN patients p ON a.patient_id = p.patient_id " +
                 "JOIN dentists d ON a.dentist_id = d.dentist_id " +
                 "JOIN treatment_types t ON a.treatment_id = t.treatment_id " +
-                "ORDER BY b.bill_date DESC";
+                "ORDER BY b.bill_id DESC";
 
         List<Bill> bills = new ArrayList<>();
         Connection conn = DBConnection.getInstance().getConnection();
@@ -128,11 +128,14 @@ public class BillDAOImpl implements BillDAO{
         treatmentType.setTreatmentName(rs.getString("treatment_name"));
         treatmentType.setCost(rs.getDouble("treatment_cost"));
 
+        List<TreatmentType> treatmentTypes = new ArrayList<>();
+        treatmentTypes.add(treatmentType);
+
         Appointment appointment = new Appointment();
         appointment.setAppointmentNumber(rs.getString("appointment_number"));
         appointment.setPatient(patient);
         appointment.setDentist(dentist);
-        appointment.setTreatmentType(treatmentType);
+        appointment.setTreatmentTypes(treatmentTypes);
         appointment.setAppointmentDate(rs.getDate("appointment_date").toLocalDate());
         appointment.setAppointmentTime(rs.getTime("appointment_time").toLocalTime());
         appointment.setStatus(rs.getString("status"));

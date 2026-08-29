@@ -56,7 +56,7 @@ public class AppointmentApiServlet extends HttpServlet{
                 + "\"patientName\":\"" + escape(appointment.getPatient().getName()) + "\","
                 + "\"contactNumber\":\"" + escape(appointment.getPatient().getContactNumber()) + "\","
                 + "\"dentistName\":\"" + escape(appointment.getDentist().getName()) + "\","
-                + "\"treatmentName\":\"" + escape(appointment.getTreatmentType().getTreatmentName()) + "\","
+                + "\"treatmentName\":\"" + escape(appointment.getTreatmentNamesDisplay()) + "\","
                 + "\"appointmentDate\":\"" + appointment.getAppointmentDate() + "\","
                 + "\"appointmentTime\":\"" + appointment.getAppointmentTime() + "\","
                 + "\"status\":\"" + escape(appointment.getStatus()) + "\""

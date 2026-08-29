@@ -47,7 +47,7 @@
                             <td><%= b.getAppointment().getAppointmentNumber() %></td>
                             <td><%= b.getAppointment().getPatient().getName() %></td>
                             <td><%= b.getAppointment().getDentist().getName() %></td>
-                            <td><%= b.getAppointment().getTreatmentType().getTreatmentName() %></td>
+                            <td><%= b.getAppointment().getTreatmentNamesDisplay() %></td>
                             <td><%= b.getBillDate() %></td>
                             <td class="text-end"><%= String.format("%.2f", b.getTotalAmount()) %></td>
                             <td>

@@ -17,12 +17,10 @@ public class AppointmentDAOImpl implements AppointmentDAO{
     private static final String JOIN_QUERY =
             "SELECT a.*, " +
                     "p.name AS patient_name, p.address AS patient_address, p.contact_number AS patient_contact, " +
-            "d.name AS dentist_name, d.specialization AS dentist_specialization, d.consultation_fee, " +
-            "t.treatment_name, t.cost AS treatment_cost " +
-            "FROM appointments a "+
-            "JOIN patients p ON a.patient_id = p.patient_id " +
-            "JOIN dentists d ON a.dentist_id = d.dentist_id " +
-            "JOIN treatment_types t ON a.treatment_id = t.treatment_id ";
+                    "d.name AS dentist_name, d.specialization AS dentist_specialization, d.consultation_fee " +
+                    "FROM appointments a " +
+                    "JOIN patients p ON a.patient_id = p.patient_id " +
+                    "JOIN dentists d ON a.dentist_id = d.dentist_id ";
 
     @Override
     public void save(Appointment appointment){
@@ -35,7 +33,7 @@ public class AppointmentDAOImpl implements AppointmentDAO{
             stmt.setString(1,appointment.getAppointmentNumber());
             stmt.setInt(2, appointment.getPatient().getPatientId());
             stmt.setInt(3, appointment.getDentist().getDentistId());
-            stmt.setInt(4, appointment.getTreatmentType().getTreatmentId());
+            stmt.setString(4, treatmentIdsToCsv(appointment.getTreatmentTypes()));
             stmt.setDate(5, Date.valueOf (appointment.getAppointmentDate()));
             stmt.setTime(6, Time.valueOf (appointment.getAppointmentTime()));
             stmt.setString(7, appointment.getStatus());
@@ -64,7 +62,7 @@ public class AppointmentDAOImpl implements AppointmentDAO{
 
     @Override
     public List<Appointment> findAll(){
-        String sql = JOIN_QUERY + "ORDER BY a.appointment_date DESC, a.appointment_time DESC";
+        String sql = JOIN_QUERY + "ORDER BY a.appointment_number DESC";
         List<Appointment>appointments = new ArrayList<>();
         Connection conn = DBConnection.getInstance().getConnection();
 
@@ -153,6 +151,44 @@ public class AppointmentDAOImpl implements AppointmentDAO{
         return false;
     }
 
+    private String treatmentIdsToCsv(List<TreatmentType> treatmentTypes) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < treatmentTypes.size(); i++) {
+            if (i > 0) sb.append(",");
+            sb.append(treatmentTypes.get(i).getTreatmentId());
+        }
+        return sb.toString();
+    }
+
+
+    private List<TreatmentType> fetchTreatmentsByCsv(String csv) {
+        List<TreatmentType> result = new ArrayList<>();
+        if (csv == null || csv.isBlank()) {
+            return result;
+        }
+
+        String[] ids = csv.split(",");
+        String sql = "SELECT * FROM treatment_types WHERE treatment_id = ?";
+        Connection conn = DBConnection.getInstance().getConnection();
+
+        for (String idStr : ids) {
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, Integer.parseInt(idStr.trim()));
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    TreatmentType t = new TreatmentType();
+                    t.setTreatmentId(rs.getInt("treatment_id"));
+                    t.setTreatmentName(rs.getString("treatment_name"));
+                    t.setCost(rs.getDouble("cost"));
+                    result.add(t);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException("Failed to fetch treatment by ID", e);
+            }
+        }
+        return result;
+    }
+
     private Appointment mapRow (ResultSet rs)throws SQLException{
         Patient patient = new Patient();
         patient.setPatientId(rs.getInt("patient_id"));
@@ -166,16 +202,13 @@ public class AppointmentDAOImpl implements AppointmentDAO{
         dentist.setSpecialization(rs.getString("dentist_specialization"));
         dentist.setConsultationFee(rs.getDouble("consultation_fee"));
 
-        TreatmentType treatmentType = new TreatmentType();
-        treatmentType.setTreatmentId(rs.getInt("treatment_id"));
-        treatmentType.setTreatmentName(rs.getString("treatment_name"));
-        treatmentType.setCost(rs.getDouble("treatment_cost"));
+        List<TreatmentType> treatmentTypes = fetchTreatmentsByCsv(rs.getString("treatment_id"));
 
         Appointment appointment = new Appointment();
         appointment.setAppointmentNumber(rs.getString("appointment_number"));
         appointment.setPatient(patient);
         appointment.setDentist(dentist);
-        appointment.setTreatmentType(treatmentType);
+        appointment.setTreatmentTypes(treatmentTypes);
         appointment.setAppointmentDate(rs.getDate("appointment_date").toLocalDate());
         appointment.setAppointmentTime(rs.getTime("appointment_time").toLocalTime());
         appointment.setStatus(rs.getString("status"));
