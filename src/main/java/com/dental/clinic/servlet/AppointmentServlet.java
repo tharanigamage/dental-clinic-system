@@ -41,7 +41,7 @@ public class AppointmentServlet extends HttpServlet {
         request.setAttribute("dentists", dentists);
         request.setAttribute("treatmentTypes", treatmentTypes);
 
-        request.getRequestDispatcher("/appointments.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/appointments.jsp").forward(request, response);
     }
 
     @Override
@@ -78,11 +78,16 @@ public class AppointmentServlet extends HttpServlet {
 
         int dentistId = parseIdSafely(request.getParameter("dentistId"));
 
-        String[] treatmentIdStrings = request.getParameterValues("treatmentIds");
-        List<Integer> treatmentIds = new ArrayList<>();
-        if (treatmentIdStrings != null) {
-            for (String idStr : treatmentIdStrings) {
-                treatmentIds.add(parseIdSafely(idStr));
+            try {
+                appointmentService.registerAppointment(name, address, contactNumber, dentistId, treatmentId, date, time);
+                response.sendRedirect(request.getContextPath()+ "/appointments");
+            }
+            catch (IllegalArgumentException e){
+                request.setAttribute("errorMessage", e.getMessage());
+                request.setAttribute("appointments", appointmentService.getAllAppointments());
+                request.setAttribute("dentists", appointmentService.getAllDentists());
+                request.setAttribute("treatmentTypes", appointmentService.getAllTreatmentTypes());
+                request.getRequestDispatcher("/WEB-INF/views/appointments.jsp").forward(request,response);
             }
         }
 

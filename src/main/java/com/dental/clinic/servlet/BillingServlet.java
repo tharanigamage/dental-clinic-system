@@ -32,7 +32,7 @@ public class BillingServlet extends HttpServlet{
         if (appointmentNumber == null || appointmentNumber.isBlank()) {
             List<Bill> bills = billingService.getAllBills();
             request.setAttribute("bills", bills);
-            request.getRequestDispatcher("/billsList.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/views/billsList.jsp").forward(request, response);
             return;
         }
 
@@ -44,7 +44,7 @@ public class BillingServlet extends HttpServlet{
             request.setAttribute("errorMessage", e.getMessage());
         }
 
-        request.getRequestDispatcher("/bill.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/bill.jsp").forward(request, response);
     }
 
     private boolean isLoggedIn(HttpServletRequest request) {
