@@ -24,50 +24,48 @@ public class AppointmentServlet extends HttpServlet {
 
     private final AppointmentService appointmentService = new AppointmentServiceImpl();
 
-    // Load appointment page data
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+        throws ServletException, IOException{
 
-        if (!isLoggedIn(request)) {
-            response.sendRedirect(request.getContextPath() + "/login");
+        if (!isLoggedIn (request)){
+            response.sendRedirect(request.getContextPath()+"/login");
             return;
         }
 
-        List<Appointment> appointments = appointmentService.getAllAppointments();
-        List<Dentist> dentists = appointmentService.getAllDentists();
-        List<TreatmentType> treatmentTypes = appointmentService.getAllTreatmentTypes();
+        List<Appointment>appointments =appointmentService.getAllAppointments();
+        List<Dentist>dentists = appointmentService.getAllDentists();
+        List<TreatmentType>treatmentTypes = appointmentService.getAllTreatmentTypes();
 
         request.setAttribute("appointments", appointments);
         request.setAttribute("dentists", dentists);
         request.setAttribute("treatmentTypes", treatmentTypes);
 
-        request.getRequestDispatcher("/appointments.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/appointments.jsp").forward(request, response);
     }
 
-    // Handle form actions
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+        throws ServletException,IOException{
 
-        if (!isLoggedIn(request)) {
-            response.sendRedirect(request.getContextPath() + "/login");
+        if (!isLoggedIn(request)){
+            response.sendRedirect(request.getContextPath()+ "/login");
             return;
         }
         String action = request.getParameter("action");
 
-        if ("register".equals(action)) {
-            handleRegister(request, response);
-        } else if ("updateStatus".equals(action)){
+        if ("register".equals(action)){
+            handleRegister(request,response);
+        }
+        else if ("updateStatus".equals(action)){
             handleUpdateStatus(request);
-            request.getSession().setAttribute("successMessage", "Appointment cancelled successfully.");
             response.sendRedirect(request.getContextPath() + "/appointments");
-        } else if ("edit".equals(action)) {
+        }
+        else if ("edit".equals(action)){
             handleEdit(request, response);
         }
     }
 
-    // Handle appointment register
     private void handleRegister(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -80,48 +78,21 @@ public class AppointmentServlet extends HttpServlet {
 
         int dentistId = parseIdSafely(request.getParameter("dentistId"));
 
-        String[] treatmentIdStrings = request.getParameterValues("treatmentIds");
-        List<Integer> treatmentIds = new ArrayList<>();
-        if (treatmentIdStrings != null) {
-            for (String idStr : treatmentIdStrings) {
-                treatmentIds.add(parseIdSafely(idStr));
+            try {
+                appointmentService.registerAppointment(name, address, contactNumber, dentistId, treatmentId, date, time);
+                response.sendRedirect(request.getContextPath()+ "/appointments");
+            }
+            catch (IllegalArgumentException e){
+                request.setAttribute("errorMessage", e.getMessage());
+                request.setAttribute("appointments", appointmentService.getAllAppointments());
+                request.setAttribute("dentists", appointmentService.getAllDentists());
+                request.setAttribute("treatmentTypes", appointmentService.getAllTreatmentTypes());
+                request.getRequestDispatcher("/WEB-INF/views/appointments.jsp").forward(request,response);
             }
         }
 
         try {
             appointmentService.registerAppointment(nic, name, address, contactNumber, dentistId, treatmentIds, date, time);
-            request.getSession().setAttribute("successMessage", "Appointment scheduled successfully.");
-            response.sendRedirect(request.getContextPath()+ "/appointments");
-        } catch (IllegalArgumentException e) {
-            request.setAttribute("errorMessage", e.getMessage());
-            request.setAttribute("appointments", appointmentService.getAllAppointments());
-            request.setAttribute("dentists", appointmentService.getAllDentists());
-            request.setAttribute("treatmentTypes", appointmentService.getAllTreatmentTypes());
-            request.getRequestDispatcher("/appointments.jsp").forward(request, response);
-        }
-
-    }
-
-    //Handle edit
-    private void handleEdit(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        String appointmentNumber = request.getParameter("appointmentNumber");
-        LocalDate date = ValidationUtil.parseDateSafely(request.getParameter("appointmentDate"));
-        LocalTime time = ValidationUtil.parseTimeSafely(request.getParameter("appointmentTime"));
-        String status = request.getParameter("status");
-
-        String[] treatmentIdStrings = request.getParameterValues("treatmentIds");
-        List<Integer> treatmentIds = new ArrayList<>();
-        if (treatmentIdStrings != null) {
-            for (String idStr : treatmentIdStrings) {
-                treatmentIds.add(parseIdSafely(idStr));
-            }
-        }
-
-        try {
-            appointmentService.updateAppointment(appointmentNumber, date, time, status, treatmentIds);
-            request.getSession().setAttribute("successMessage", "Appointment updated successfully.");
             response.sendRedirect(request.getContextPath() + "/appointments");
         } catch (IllegalArgumentException e) {
             request.setAttribute("errorMessage", e.getMessage());
@@ -132,26 +103,45 @@ public class AppointmentServlet extends HttpServlet {
         }
     }
 
-    // Convert id value to integer
-    private int parseIdSafely(String value) {
+    private void handleEdit(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String appointmentNumber = request.getParameter("appointmentNumber");
+        LocalDate date = ValidationUtil.parseDateSafely(request.getParameter("appointmentDate"));
+        LocalTime time = ValidationUtil.parseTimeSafely(request.getParameter("appointmentTime"));
+        String status = request.getParameter("status");
+
+        try {
+            appointmentService.updateAppointment(appointmentNumber, date, time, status);
+            response.sendRedirect(request.getContextPath() + "/appointments");
+        } catch (IllegalArgumentException e) {
+            request.setAttribute("errorMessage", e.getMessage());
+            request.setAttribute("appointments", appointmentService.getAllAppointments());
+            request.setAttribute("dentists", appointmentService.getAllDentists());
+            request.setAttribute("treatmentTypes", appointmentService.getAllTreatmentTypes());
+            request.getRequestDispatcher("/appointments.jsp").forward(request, response);
+        }
+    }
+
+    private int parseIdSafely (String value){
         try {
             return Integer.parseInt(value);
-        } catch (NumberFormatException | NullPointerException e) {
+        }
+        catch (NumberFormatException | NullPointerException e){
             return -1;
         }
 
     }
 
-    // Handle update status
-    private void handleUpdateStatus(HttpServletRequest request) {
-        String appointmentNumber = request.getParameter("appointmentNumber");
-        String status = request.getParameter("status");
+    private void handleUpdateStatus (HttpServletRequest request){
+        String appointmentNumber = request.getParameter ("appointmentNumber");
+        String status = request.getParameter ("status");
         appointmentService.updateAppointmentStatus(appointmentNumber, status);
     }
 
-    private boolean isLoggedIn(HttpServletRequest request) {
+    private boolean isLoggedIn (HttpServletRequest request){
         HttpSession session = request.getSession(false);
-        return session != null && session.getAttribute("loggedInUser") != null;
+        return session != null && session.getAttribute("loggedInUser") !=null;
     }
 
 }
