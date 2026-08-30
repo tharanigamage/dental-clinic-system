@@ -47,7 +47,7 @@
             <p class="text-muted mb-4">Sign in to continue to your dashboard</p>
 
             <% if (request.getAttribute("errorMessage") != null) { %>
-                <div class="alert alert-danger"><%= request.getAttribute("errorMessage") %></div>
+                <div class="alert alert-danger" style="width: 100%;"><%= request.getAttribute("errorMessage") %></div>
             <% } %>
 
             <form method="post" action="${pageContext.request.contextPath}/login">

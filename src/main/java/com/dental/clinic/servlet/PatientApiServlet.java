@@ -19,6 +19,7 @@ public class PatientApiServlet extends HttpServlet {
 
     private final PatientDAO patientDAO = new PatientDAOImpl();
 
+    // Handle patient search request
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

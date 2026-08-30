@@ -12,6 +12,7 @@ import java.util.List;
 
 public class UserDAOImpl implements UserDAO {
 
+    // Find by username
     @Override
     public User findByUsername (String username){
         String sql = "SELECT * FROM users WHERE username = ?";
@@ -31,6 +32,7 @@ public class UserDAOImpl implements UserDAO {
         return null;
     }
 
+    // Find by id
     @Override
     public User findById(int userId) {
         String sql = "SELECT * FROM users WHERE user_id = ?";
@@ -48,6 +50,7 @@ public class UserDAOImpl implements UserDAO {
         return null;
     }
 
+    // All users
     @Override
     public List<User> findAll() {
         String sql = "SELECT * FROM users ORDER BY username";
@@ -65,6 +68,7 @@ public class UserDAOImpl implements UserDAO {
         return users;
     }
 
+    // Save new user
     @Override
     public void save(User user) {
         String sql = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
@@ -80,6 +84,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    // Update user
     @Override
     public void update(User user) {
         String sql = "UPDATE users SET username = ?, password = ?, role = ? WHERE user_id = ?";
@@ -96,6 +101,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    // Delete user
     @Override
     public void delete(int userId) {
         String sql = "DELETE FROM users WHERE user_id = ?";
@@ -109,6 +115,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    //Count by role
     @Override
     public int countByRole(String role) {
         String sql = "SELECT COUNT(*) FROM users WHERE role = ?";
@@ -126,6 +133,7 @@ public class UserDAOImpl implements UserDAO {
         return 0;
     }
 
+    // Convert database result to object
     private User mapRow(ResultSet rs) throws SQLException {
         User user = new User();
         user.setUserId(rs.getInt("user_Id"));

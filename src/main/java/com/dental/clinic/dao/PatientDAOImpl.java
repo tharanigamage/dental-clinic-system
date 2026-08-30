@@ -14,6 +14,7 @@ import java.sql.Statement;
 
 public class PatientDAOImpl implements PatientDAO {
 
+    //Save new patient
     @Override
     public int save (Patient patient){
         String sql = "INSERT INTO patients (nic, name, address, contact_number) VALUES (?, ?, ?, ?)";
@@ -37,6 +38,7 @@ public class PatientDAOImpl implements PatientDAO {
         return -1;
     }
 
+    //Find by id
     @Override
     public Patient findById (int patientId){
         String sql = "SELECT * FROM patients WHERE patient_id = ?";
@@ -55,6 +57,7 @@ public class PatientDAOImpl implements PatientDAO {
         return null;
     }
 
+    //Find by nic
     @Override
     public Patient findByNic(String nic) {
         String sql = "SELECT * FROM patients WHERE nic = ?";
@@ -72,6 +75,7 @@ public class PatientDAOImpl implements PatientDAO {
         return null;
     }
 
+    //Find by nic prefix
     @Override
     public List<Patient> findByNicPrefix(String nicPrefix) {
         String sql = "SELECT * FROM patients WHERE nic LIKE ? ORDER BY nic LIMIT 5";
@@ -90,6 +94,25 @@ public class PatientDAOImpl implements PatientDAO {
         return patients;
     }
 
+    //All patients
+    @Override
+    public List<Patient> findAll() {
+        String sql = "SELECT * FROM patients ORDER BY patient_id DESC";
+        List<Patient> patients = new ArrayList<>();
+        Connection conn = DBConnection.getInstance().getConnection();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                patients.add(mapRow(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to fetch patients", e);
+        }
+        return patients;
+    }
+
+    // Convert database result to object
     private Patient mapRow(ResultSet rs) throws SQLException{
         Patient patient = new Patient();
         patient.setPatientId(rs.getInt("patient_id"));

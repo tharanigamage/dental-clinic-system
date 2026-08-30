@@ -22,6 +22,7 @@ public class AppointmentDAOImpl implements AppointmentDAO{
                     "JOIN patients p ON a.patient_id = p.patient_id " +
                     "JOIN dentists d ON a.dentist_id = d.dentist_id ";
 
+    // Save new appointment
     @Override
     public void save(Appointment appointment){
         String sql = "INSERT INTO appointments "+
@@ -43,6 +44,8 @@ public class AppointmentDAOImpl implements AppointmentDAO{
             throw new RuntimeException("Failed to save appointment", e);
         }
     }
+
+    // Find by appointment number
     @Override
     public Appointment findByAppointmentNumber (String appointmentNumber){
         String sql = JOIN_QUERY+ "WHERE a.appointment_number = ?";
@@ -60,6 +63,7 @@ public class AppointmentDAOImpl implements AppointmentDAO{
         return null;
     }
 
+    //All appointments
     @Override
     public List<Appointment> findAll(){
         String sql = JOIN_QUERY + "ORDER BY a.appointment_number DESC";
@@ -78,6 +82,7 @@ public class AppointmentDAOImpl implements AppointmentDAO{
         return appointments;
     }
 
+    // Update the status
     @Override
     public void updateStatus (String appointmentNumber, String status){
         String sql = "UPDATE appointments SET status = ? WHERE appointment_number = ?";
@@ -93,9 +98,10 @@ public class AppointmentDAOImpl implements AppointmentDAO{
         }
     }
 
+    // Update appointment details
     @Override
-    public void updateAppointment(String appointmentNumber, LocalDate date, LocalTime time, String status) {
-        String sql = "UPDATE appointments SET appointment_date = ?, appointment_time = ?, status = ? " +
+    public void updateAppointment(String appointmentNumber, LocalDate date, LocalTime time, String status, String treatmentIdsCsv) {
+        String sql = "UPDATE appointments SET appointment_date = ?, appointment_time = ?, status = ?, treatment_id = ? " +
                 "WHERE appointment_number = ?";
         Connection conn = DBConnection.getInstance().getConnection();
 
@@ -103,13 +109,15 @@ public class AppointmentDAOImpl implements AppointmentDAO{
             stmt.setDate(1, Date.valueOf(date));
             stmt.setTime(2, Time.valueOf(time));
             stmt.setString(3, status);
-            stmt.setString(4, appointmentNumber);
+            stmt.setString(4, treatmentIdsCsv);
+            stmt.setString(5, appointmentNumber);
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Failed to update appointment", e);
         }
     }
 
+    // Total appointments count
     @Override
     public int countAll(){
         String sql = "SELECT COUNT(*) FROM appointments";
@@ -127,6 +135,7 @@ public class AppointmentDAOImpl implements AppointmentDAO{
         return 0;
     }
 
+    // Check dentist already has an appointment at the given date and time
     @Override
     public boolean existsByDentistDateTime(int dentistId, LocalDate date, LocalTime time) {
         String sql = "SELECT COUNT(*) FROM appointments " +
@@ -151,6 +160,7 @@ public class AppointmentDAOImpl implements AppointmentDAO{
         return false;
     }
 
+    // Treatment IDs into a comma separated value
     private String treatmentIdsToCsv(List<TreatmentType> treatmentTypes) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < treatmentTypes.size(); i++) {
@@ -161,6 +171,7 @@ public class AppointmentDAOImpl implements AppointmentDAO{
     }
 
 
+    // Get treatment details
     private List<TreatmentType> fetchTreatmentsByCsv(String csv) {
         List<TreatmentType> result = new ArrayList<>();
         if (csv == null || csv.isBlank()) {
@@ -189,6 +200,7 @@ public class AppointmentDAOImpl implements AppointmentDAO{
         return result;
     }
 
+    // Convert database result to object
     private Appointment mapRow (ResultSet rs)throws SQLException{
         Patient patient = new Patient();
         patient.setPatientId(rs.getInt("patient_id"));

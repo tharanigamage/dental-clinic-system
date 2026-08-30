@@ -1,19 +1,23 @@
 package com.dental.clinic.model;
 
 public class TreatmentType {
+    // Treatment type details
     private int treatmentId;
     private String treatmentName;
     private double cost;
 
+    //Default Constructor
     public TreatmentType() {
     }
 
+    // Constructor
     public TreatmentType(int treatmentId, String treatmentName, double cost) {
         this.treatmentId = treatmentId;
         this.treatmentName = treatmentName;
         this.cost = cost;
     }
 
+    // Getters and setters
     public int getTreatmentId() {
         return treatmentId;
     }
@@ -38,6 +42,7 @@ public class TreatmentType {
         this.cost = cost;
     }
 
+    // Return treatment type details as text
     @Override
     public String toString() {
         return "TreatmentType { " +

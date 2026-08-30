@@ -10,21 +10,22 @@ import com.dental.clinic.model.Bill;
 import java.time.LocalDate;
 import java.util.List;
 
-public class BillingServiceImpl implements  BillingService{
+public class BillingServiceImpl implements BillingService {
 
-        private final AppointmentDAO appointmentDAO;
-        private final BillDAO billDAO;
+    private final AppointmentDAO appointmentDAO;
+    private final BillDAO billDAO;
 
-        public BillingServiceImpl() {
-            this.appointmentDAO = new AppointmentDAOImpl();
-            this.billDAO = new BillDAOImpl();
-        }
+    public BillingServiceImpl() {
+        this.appointmentDAO = new AppointmentDAOImpl();
+        this.billDAO = new BillDAOImpl();
+    }
 
     public BillingServiceImpl(AppointmentDAO appointmentDAO, BillDAO billDAO) {
         this.appointmentDAO = appointmentDAO;
         this.billDAO = billDAO;
     }
 
+    // Generate bill for appointment
     @Override
     public Bill generateBill(String appointmentNumber) {
         Bill existingBill = billDAO.findByAppointmentNumber(appointmentNumber);
@@ -41,6 +42,7 @@ public class BillingServiceImpl implements  BillingService{
             throw new IllegalArgumentException("Cannot generate a bill for a cancelled appointment.");
         }
 
+        // Calculate bill amounts
         double consultationFee = appointment.getDentist().getConsultationFee();
         double treatmentCost = appointment.getTotalTreatmentCost();
         double totalAmount = consultationFee + treatmentCost;
@@ -62,11 +64,13 @@ public class BillingServiceImpl implements  BillingService{
         return bill;
     }
 
+    //All bills
     @Override
     public List<Bill> getAllBills() {
         return billDAO.findAll();
     }
 
+    //Generate bill ID
     private String generateBillId() {
         int nextNumber = billDAO.countAll() + 1;
         return String.format("BILL%03d", nextNumber);

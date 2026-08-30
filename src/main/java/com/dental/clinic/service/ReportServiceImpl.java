@@ -12,6 +12,7 @@ public class ReportServiceImpl implements ReportService{
 
     private final ReportDAO reportDAO;
 
+    // Constructor
     public ReportServiceImpl() {
         this.reportDAO = new ReportDAOImpl();
     }
@@ -20,6 +21,7 @@ public class ReportServiceImpl implements ReportService{
         this.reportDAO = reportDAO;
     }
 
+    // Get daily appointments selected date
     @Override
     public List<Appointment> getDailyAppointments(LocalDate date) {
         if (date == null) {
@@ -28,11 +30,13 @@ public class ReportServiceImpl implements ReportService{
         return reportDAO.findAppointmentsByDate(date);
     }
 
+    // Get monthly revenue details
     @Override
     public List<Bill> getMonthlyRevenue(int month, int year) {
         return reportDAO.findBillsByMonth(month, year);
     }
 
+    // Get dentist appointments within selected date range
     @Override
     public List<Appointment> getDentistAppointments(int dentistId, LocalDate from, LocalDate to) {
         if (from == null) {

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DentistDAOImpl implements DentistDAO{
+    // All dentists
     @Override
     public List<Dentist> findAll(){
         String sql = "SELECT * FROM dentists";
@@ -29,6 +30,7 @@ public class DentistDAOImpl implements DentistDAO{
         return dentists;
     }
 
+    //Find by id
     @Override
     public Dentist findById (int dentistId){
         String sql = "SELECT * FROM dentists WHERE dentist_id = ?";
@@ -47,6 +49,7 @@ public class DentistDAOImpl implements DentistDAO{
         return null;
     }
 
+    // Convert database result to object
     private Dentist mapRow (ResultSet rs) throws SQLException{
         Dentist dentist = new Dentist();
         dentist.setDentistId(rs.getInt("dentist_id"));

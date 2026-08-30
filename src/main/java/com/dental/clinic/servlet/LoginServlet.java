@@ -16,6 +16,7 @@ import java.io.IOException;
 public class LoginServlet extends HttpServlet {
     private final AuthenticationService authService = new AuthenticationServiceImpl();
 
+    // Display the login page
     @Override
     protected void doGet (HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException{
@@ -23,6 +24,8 @@ public class LoginServlet extends HttpServlet {
         request.getRequestDispatcher("/login.jsp").forward(request, response);
     }
 
+    //Handle user login
+    @Override
     protected void doPost (HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException{
 

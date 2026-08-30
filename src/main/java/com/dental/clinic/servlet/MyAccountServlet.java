@@ -17,6 +17,7 @@ public class MyAccountServlet extends HttpServlet {
 
     private final StaffService staffService = new StaffServiceImpl();
 
+    // Handle password update request
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

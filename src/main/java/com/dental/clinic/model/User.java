@@ -1,14 +1,17 @@
 package com.dental.clinic.model;
 
 public class User {
+    // User details
     private int userId;
     private String username;
     private String password;
     private String role;
 
+    //Default Constructor
     public User() {
     }
 
+    // Constructor
     public User(int userId, String username, String password, String role) {
         this.userId = userId;
         this.username = username;
@@ -16,6 +19,7 @@ public class User {
         this.role = role;
     }
 
+    // Getters and setters
     public int getUserId() {
         return userId;
     }
@@ -48,6 +52,7 @@ public class User {
         this.role = role;
     }
 
+    // Return user details as text
     @Override
     public String toString() {
         return "User { " +

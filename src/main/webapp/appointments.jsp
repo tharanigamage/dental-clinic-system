@@ -8,6 +8,8 @@
 <head>
     <title>Appointments - Sunrise Dental Clinic</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/custom.css" rel="stylesheet">
 </head>
 <body>
 <div class="d-flex">
@@ -23,8 +25,18 @@
             </button>
         </div>
 
+        <!-- Display success message -->
+        <% if (session.getAttribute("successMessage") != null) { %>
+        <div class="alert alert-success alert-dismissible fade show" style="width: 100%;">
+            <%= session.getAttribute("successMessage") %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <% session.removeAttribute("successMessage"); %>
+        <% } %>
+
+        <!-- Display error message -->
         <% if (request.getAttribute("errorMessage") != null) { %>
-        <div class="alert alert-danger alert-dismissible fade show" style="max-width: 600px;">
+        <div class="alert alert-danger alert-dismissible fade show" style="width: 100%;">
             <%= request.getAttribute("errorMessage") %>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
@@ -84,12 +96,20 @@
                                 </button>
 
                                 <% if ("Pending".equals(a.getStatus())) { %>
+                                <%
+                                    StringBuilder treatmentIdsCsv = new StringBuilder();
+                                    for (int i = 0; i < a.getTreatmentTypes().size(); i++) {
+                                        if (i > 0) treatmentIdsCsv.append(",");
+                                        treatmentIdsCsv.append(a.getTreatmentTypes().get(i).getTreatmentId());
+                                    }
+                                %>
                                 <button type="button" class="btn btn-sm btn-outline-secondary"
                                         data-bs-toggle="modal" data-bs-target="#editAppointmentModal"
                                         data-appt-number="<%= a.getAppointmentNumber() %>"
                                         data-date="<%= a.getAppointmentDate() %>"
                                         data-time="<%= a.getAppointmentTime() %>"
-                                        data-status="<%= a.getStatus() %>">
+                                        data-status="<%= a.getStatus() %>"
+                                        data-treatment-ids="<%= treatmentIdsCsv.toString() %>">
                                     <i class="bi bi-pencil-square"></i>
                                 </button>
                                 <% } %>
@@ -97,6 +117,7 @@
                         </tr>
                         <% } %>
 
+                        <!-- Display message when no appointments exist -->
                         <% if (appointments.isEmpty()) { %>
                         <tr>
                             <td colspan="8" class="text-center text-muted py-4">No appointments yet. Click "+ New Appointment" to add one.</td>
@@ -109,6 +130,7 @@
     </div>
 </div>
 
+<!-- Add new appointment -->
 <div class="modal fade" id="addAppointmentModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -153,7 +175,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Treatment Type(s)</label>
-                        <div class="border rounded p-2" style="max-height: 160px; overflow-y: auto;">
+                        <div class="border rounded p-2" style="max-height: 160px; overflow-y: auto;" required>
                             <%
                                 List<TreatmentType> treatmentTypes = (List<TreatmentType>) request.getAttribute("treatmentTypes");
                                 for (TreatmentType t : treatmentTypes) {
@@ -188,6 +210,7 @@
     </div>
 </div>
 
+<!-- View appointment -->
 <div class="modal fade" id="viewAppointmentModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -212,12 +235,11 @@
             <div class="modal-footer">
                 <a id="v-bill-link" href="#" target="_blank" class="btn btn-success btn-sm" style="display:none;">Generate Bill</a>
                 <form method="post" action="${pageContext.request.contextPath}/appointments"
-                        class="d-inline" id="v-cancel-form" style="display:none;"
-                        onsubmit="return confirm('Cancel this appointment? This cannot be undone.');">
+                        class="d-inline" id="v-cancel-form" style="display:none;">
                     <input type="hidden" name="action" value="updateStatus">
                     <input type="hidden" name="status" value="Cancelled">
                     <input type="hidden" name="appointmentNumber" id="v-cancel-appt-number">
-                    <button type="submit" class="btn btn-danger btn-sm">Cancel Appointment</button>
+                    <button type="button" class="btn btn-danger btn-sm" id="v-cancel-trigger">Cancel Appointment</button>
                 </form>
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
@@ -226,7 +248,7 @@
 </div>
 
 
-
+<!-- Edit appointment -->
 <div class="modal fade" id="editAppointmentModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -247,6 +269,22 @@
                         <label class="form-label">Time</label>
                         <input type="time" class="form-control" name="appointmentTime" id="edit-time" required>
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label">Treatment Type(s)</label>
+                        <div class="border rounded p-2" id="edit-treatment-list" style="max-height: 160px; overflow-y: auto;">
+                            <%
+                                for (TreatmentType t : treatmentTypes) {
+                            %>
+                            <div class="form-check">
+                                <input class="form-check-input edit-treatment-checkbox" type="checkbox" name="treatmentIds"
+                                       value="<%= t.getTreatmentId() %>" id="edit-treatment-<%= t.getTreatmentId() %>">
+                                <label class="form-check-label" for="edit-treatment-<%= t.getTreatmentId() %>">
+                                    <%= t.getTreatmentName() %> (Rs. <%= t.getCost() %>)
+                                </label>
+                            </div>
+                            <% } %>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -259,6 +297,19 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+
+    // Reset the new appointment form
+    document.getElementById('addAppointmentModal').addEventListener('show.bs.modal', function () {
+        this.querySelector('form').reset();
+
+        const suggestions = document.getElementById('nic-suggestions');
+        if (suggestions) {
+            suggestions.innerHTML = '';
+            suggestions.style.display = 'none';
+        }
+    });
+
+    // Load appointment details
     document.getElementById('viewAppointmentModal').addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;
         const status = button.dataset.status;
@@ -292,29 +343,61 @@
 
             } else if (status === 'Completed') {
                billLink.style.display = 'inline-block';
-               billLink.removeAttribute('href');
-               billLink.classList.add('disabled');
-               billLink.setAttribute('aria-disabled', 'true');
+               billLink.textContent = 'View Bill';
+               billLink.classList.remove('disabled');
+               billLink.removeAttribute('aria-disabled');
+               billLink.href = contextPath + '/billing?appointmentNumber=' + apptNumber;
 
                cancelForm.style.display = 'inline-block';
                cancelBtn.disabled = true;
 
             } else {
                billLink.style.display = 'inline-block';
+               billLink.textContent = 'Generate Bill';
                billLink.href = contextPath + '/billing?appointmentNumber=' + apptNumber;
+               billLink.onclick = function () {
+                   const confirmed = confirm('Generate the bill for this appointment? This will mark the appointment as Completed.');
+                   if (confirmed) {
+                       document.addEventListener('visibilitychange', function refreshOnReturn() {
+                           if (document.visibilityState === 'visible') {
+                               document.removeEventListener('visibilitychange', refreshOnReturn);
+                               location.reload();
+                           }
+                       });
+                   }
+                   return confirmed;
+               };
 
                cancelForm.style.display = 'inline-block';
             }
         });
 
+        // Confirm appointment cancel
+        document.getElementById('v-cancel-trigger').addEventListener('click', function () {
+            document.activeElement.blur();
+
+            bootstrap.Modal.getInstance(document.getElementById('viewAppointmentModal')).hide();
+
+            showConfirm('Cancel this appointment? This cannot be undone.', function () {
+                document.getElementById('v-cancel-form').submit();
+            });
+        });
+
+        // Load existing appointment details
         document.getElementById('editAppointmentModal').addEventListener('show.bs.modal', function (event) {
             const button = event.relatedTarget;
             document.getElementById('edit-appt-number').value = button.dataset.apptNumber;
             document.getElementById('edit-status').value = button.dataset.status;
             document.getElementById('edit-date').value = button.dataset.date;
             document.getElementById('edit-time').value = button.dataset.time;
+
+            const currentIds = (button.dataset.treatmentIds || '').split(',').map(s => s.trim());
+            document.querySelectorAll('.edit-treatment-checkbox').forEach(function (checkbox) {
+                checkbox.checked = currentIds.includes(checkbox.value);
+            });
         });
 
+        // Patient nic search
         const nicInput = document.getElementById('nic-input');
         const suggestionsBox = document.getElementById('nic-suggestions');
         const nameInput = document.getElementById('name-input');
@@ -323,6 +406,7 @@
         const contextPath = '${pageContext.request.contextPath}';
         let searchTimeout;
 
+        // Search existing patients when NIC is entered
         nicInput.addEventListener('input', function () {
             clearTimeout(searchTimeout);
             const query = nicInput.value.trim();
@@ -375,6 +459,7 @@
             }
         });
 
+        // Disable past dates
         (function () {
                 const today = new Date();
                 const yyyy = today.getFullYear();
@@ -386,6 +471,7 @@
                 document.getElementById('edit-date').setAttribute('min', todayStr);
             })();
 
+        // Filter table
         function filterTable() {
         const query = document.getElementById('searchBox').value.toLowerCase();
         const rows = document.querySelectorAll('#appointmentsTable tbody tr');

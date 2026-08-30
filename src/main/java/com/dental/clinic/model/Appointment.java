@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 public class Appointment {
+    // Appointment details
     private String appointmentNumber;
     private Patient patient;
     private Dentist dentist;
@@ -13,11 +14,11 @@ public class Appointment {
     private LocalTime appointmentTime;
     private String status;
 
-    //default constructor
+    //Default Constructor
     public Appointment() {
     }
 
-    //constructor
+    //Constructor
     public Appointment(String appointmentNumber, Patient patient, Dentist dentist, List<TreatmentType> treatmentTypes, LocalTime appointmentTime, LocalDate appointmentDate, String status) {
         this.appointmentNumber = appointmentNumber;
         this.patient = patient;
@@ -28,6 +29,7 @@ public class Appointment {
         this.status = status;
     }
 
+    // Getters and setters
     public String getAppointmentNumber() {
         return appointmentNumber;
     }
@@ -107,6 +109,7 @@ public class Appointment {
         this.status = status;
     }
 
+    // Return appointment details as text
     @Override
     public String toString() {
         return "Appointment { " +

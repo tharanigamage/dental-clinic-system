@@ -6,6 +6,8 @@
 <head>
     <title>Bills - Sunrise Dental Clinic</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/custom.css" rel="stylesheet">
 </head>
 <body>
 <div class="d-flex">
@@ -21,6 +23,7 @@
         <input type="text" id="searchBox" class="form-control mb-3" style="max-width: 320px;"
                placeholder="Search by bill no. or patient name..." onkeyup="filterTable()">
 
+        <!-- Bills grid -->
         <div class="card">
             <div class="table-responsive">
                 <table class="table table-hover mb-0" id="billsTable">
@@ -69,6 +72,7 @@
 </div>
 
 <script>
+    // Filter table
     function filterTable() {
         const query = document.getElementById('searchBox').value.toLowerCase();
         const rows = document.querySelectorAll('#billsTable tbody tr');
