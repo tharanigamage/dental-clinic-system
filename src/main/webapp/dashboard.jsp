@@ -56,6 +56,7 @@
             </div>
         </div>
 
+        <!-- Dashboard charts -->
         <div class="row g-3">
             <div class="col-md-4">
                 <div class="card h-100">
@@ -120,6 +121,7 @@
             </div>
         </div>
 
+        <!-- Recent appointments -->
         <h5 class="mb-3 mt-4">Recent Appointments</h5>
         <div class="card">
             <div class="table-responsive">
@@ -171,6 +173,7 @@
 
 
 <script>
+    // Appointment status chart
     const statusCtx = document.getElementById('statusChart').getContext('2d');
     new Chart(statusCtx, {
         type: 'doughnut',
@@ -220,6 +223,7 @@
         const revenueLabels = [<%= labelsJs.toString() %>];
         const revenueValues = [<%= valuesJs.toString() %>];
 
+        // Monthly revenue trend chart
         const revenueCtx = document.getElementById('revenueChart').getContext('2d');
         new Chart(revenueCtx, {
             type: 'line',
@@ -314,6 +318,7 @@
     const treatmentLabels = [<%= treatmentLabelsJs.toString() %>];
     const treatmentValues = [<%= treatmentValuesJs.toString() %>];
 
+    // Top treatments chart
     const treatmentsCtx = document.getElementById('treatmentsChart').getContext('2d');
     new Chart(treatmentsCtx, {
         type: 'bar',

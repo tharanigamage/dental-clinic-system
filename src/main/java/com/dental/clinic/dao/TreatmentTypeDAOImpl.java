@@ -12,6 +12,7 @@ import java.util.List;
 
 public class TreatmentTypeDAOImpl implements TreatmentTypeDAO{
 
+    // Find all treatment types
     @Override
     public List<TreatmentType> findAll (){
         String sql = "SELECT * FROM treatment_types";
@@ -30,6 +31,7 @@ public class TreatmentTypeDAOImpl implements TreatmentTypeDAO{
         return list;
     }
 
+    // Find by id
     @Override
     public TreatmentType findById (int treatmentId){
         String sql = "SELECT * FROM treatment_types WHERE treatment_id = ?";
@@ -48,6 +50,7 @@ public class TreatmentTypeDAOImpl implements TreatmentTypeDAO{
         return  null;
     }
 
+    // Convert database result to object
     private TreatmentType mapRow(ResultSet rs) throws SQLException{
         TreatmentType t = new TreatmentType();
         t.setTreatmentId(rs.getInt("treatment_id"));

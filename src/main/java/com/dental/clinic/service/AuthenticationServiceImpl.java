@@ -3,6 +3,7 @@ package com.dental.clinic.service;
 import com.dental.clinic.dao.UserDAO;
 import com.dental.clinic.dao.UserDAOImpl;
 import com.dental.clinic.model.User;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class AuthenticationServiceImpl implements AuthenticationService {
 
@@ -16,6 +17,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         this.userDAO = userDAO;
     }
 
+    // Authenticate username and password
     @Override
     public User login(String username, String password) {
         if (username == null || username.isBlank() || password == null || password.isEmpty()){
@@ -28,7 +30,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return null;
         }
 
-        if (!user.getPassword().equals(password)){
+        if (!BCrypt.checkpw(password, user.getPassword())){
             return null;
         }
         return user;

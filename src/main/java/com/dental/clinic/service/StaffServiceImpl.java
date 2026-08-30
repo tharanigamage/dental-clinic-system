@@ -4,6 +4,7 @@ import com.dental.clinic.dao.UserDAO;
 import com.dental.clinic.dao.UserDAOImpl;
 import com.dental.clinic.model.User;
 import com.dental.clinic.util.ValidationUtil;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.List;
 
@@ -19,11 +20,13 @@ public class StaffServiceImpl implements StaffService{
         this.userDAO = userDAO;
     }
 
+    // All staff users
     @Override
     public List<User> getAllStaff() {
         return userDAO.findAll();
     }
 
+    // Add new staff user
     @Override
     public User addStaff(String username, String password, String role) {
 
@@ -42,9 +45,10 @@ public class StaffServiceImpl implements StaffService{
             throw new IllegalArgumentException("This username is already taken. Please choose another.");
         }
 
+        // Create new user
         User user = new User();
         user.setUsername(username.trim());
-        user.setPassword(password.trim());
+        user.setPassword(BCrypt.hashpw(password.trim(), BCrypt.gensalt()));
         user.setRole(role);
 
         userDAO.save(user);
@@ -52,6 +56,7 @@ public class StaffServiceImpl implements StaffService{
         return user;
     }
 
+    // Update staff user
     @Override
     public User updateStaff(int userId, String username, String password, String role) {
 
@@ -85,7 +90,7 @@ public class StaffServiceImpl implements StaffService{
             if (password.trim().length() < 4) {
                 throw new IllegalArgumentException("New password must be at least 4 characters.");
             }
-            existingUser.setPassword(password.trim());
+            existingUser.setPassword(BCrypt.hashpw(password.trim(), BCrypt.gensalt()));
         }
 
         userDAO.update(existingUser);
@@ -93,6 +98,7 @@ public class StaffServiceImpl implements StaffService{
         return existingUser;
     }
 
+    // Update login password
     @Override
     public void updateOwnPassword(int userId, String currentPassword, String newPassword) {
 
@@ -101,7 +107,7 @@ public class StaffServiceImpl implements StaffService{
             throw new IllegalArgumentException("Account not found.");
         }
 
-        if (!user.getPassword().equals(currentPassword)) {
+        if (!BCrypt.checkpw(currentPassword, user.getPassword())) {
             throw new IllegalArgumentException("Current password is incorrect.");
         }
 
@@ -109,10 +115,11 @@ public class StaffServiceImpl implements StaffService{
             throw new IllegalArgumentException("New password must be at least 4 characters.");
         }
 
-        user.setPassword(newPassword.trim());
+        user.setPassword(BCrypt.hashpw(newPassword.trim(), BCrypt.gensalt()));
         userDAO.update(user);
     }
 
+    //Delete staff user
     @Override
     public void deleteStaff(int userId) {
         userDAO.delete(userId);

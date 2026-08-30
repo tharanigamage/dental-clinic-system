@@ -15,6 +15,8 @@
 <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 240px; min-height: 100vh;">
     <span class="fs-5 fw-bold mb-3">Sunrise Dental Clinic</span>
     <hr>
+
+    <!-- Navigation links -->
     <ul class="nav nav-pills flex-column mb-auto">
         <li>
             <a href="${pageContext.request.contextPath}/dashboard"
@@ -32,6 +34,12 @@
             <a href="${pageContext.request.contextPath}/billing"
                class="nav-link <%= currentPage.equals("billing") ? "active" : "text-white" %>">
                 <i class="bi bi-receipt me-2"></i>Billing
+            </a>
+        </li>
+        <li>
+            <a href="${pageContext.request.contextPath}/patients"
+               class="nav-link <%= currentPage.equals("patients") ? "active" : "text-white" %>">
+                <i class="bi bi-people-fill me-2"></i>Patients
             </a>
         </li>
         <li>
@@ -60,12 +68,13 @@
         <button type="button" class="btn btn-outline-light btn-sm mt-2 w-100" data-bs-toggle="modal" data-bs-target="#myAccountModal">
             <i class="bi bi-person-gear me-1"></i>My Account
         </button>
-        <a href="${pageContext.request.contextPath}/logout" class="btn btn-outline-danger btn-sm mt-2 w-100">
+        <a href="#" id="logout-link" class="btn btn-outline-danger btn-sm mt-2 w-100">
             <i class="bi bi-box-arrow-right me-1"></i>Logout
         </a>
     </div>
 </div>
 
+<!-- My Account modal -->
 <div class="modal fade" id="myAccountModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -80,10 +89,16 @@
                 </table>
 
                 <% if (accountFlashSuccess != null) { %>
-                <div class="alert alert-success"><%= accountFlashSuccess %></div>
+                <div class="alert alert-success alert-dismissible fade show" style="width: 100%;">
+                    <%= accountFlashSuccess %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
                 <% } %>
                 <% if (accountFlashError != null) { %>
-                <div class="alert alert-danger"><%= accountFlashError %></div>
+                <div class="alert alert-danger alert-dismissible fade show" style="width: 100%;">
+                    <%= accountFlashError %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
                 <% } %>
 
                 <form method="post" action="${pageContext.request.contextPath}/myAccount">
@@ -107,6 +122,18 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!--Show confirmation-->
+<jsp:include page="confirmModal.jsp" />
+<script>
+    document.getElementById('logout-link').addEventListener('click', function (event) {
+        event.preventDefault();
+        showConfirm('Are you sure you want to logout?', function () {
+            window.location.href = '${pageContext.request.contextPath}/logout';
+        });
+    });
+</script>
+
 <% if (accountFlashSuccess != null || accountFlashError != null) { %>
 <script>
     document.addEventListener('DOMContentLoaded', function () {

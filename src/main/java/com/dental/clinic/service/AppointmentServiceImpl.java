@@ -34,12 +34,13 @@ public class AppointmentServiceImpl implements AppointmentService{
         this.appointmentDAO = appointmentDAO;
     }
 
+    // Register a new appointment
     @Override
     public Appointment registerAppointment(String nic, String patientName, String address, String contactNumber,
                                            int dentistId, List<Integer> treatmentIds, LocalDate date, LocalTime time){
 
-        if (ValidationUtil.isNullorBlank(nic)){
-            throw new IllegalArgumentException("Please enter the patient's NIC.");
+        if (!ValidationUtil.isValidNic(nic)){
+            throw new IllegalArgumentException("Please enter a valid NIC (9 digits + V/X, or 12 digits).");
         }
 
         if (!ValidationUtil.isValidName(patientName)){
@@ -74,6 +75,7 @@ public class AppointmentServiceImpl implements AppointmentService{
             throw new IllegalArgumentException("This dentist already has an appointment at that date and time. Please choose a different slot.");
         }
 
+        // Find existing patient using nic
         Patient patient = patientDAO.findByNic(nic.trim());
         if (patient == null) {
             patient = new Patient();
@@ -85,8 +87,10 @@ public class AppointmentServiceImpl implements AppointmentService{
             patient.setPatientId(patientId);
         }
 
+        // Select dentist
         Dentist dentist = dentistDAO.findById(dentistId);
 
+        // Selected treatment details
         List<TreatmentType> treatmentTypes = new ArrayList<>();
         for (int treatmentId : treatmentIds) {
             TreatmentType t = treatmentTypeDAO.findById(treatmentId);
@@ -111,18 +115,21 @@ public class AppointmentServiceImpl implements AppointmentService{
         return appointment;
     }
 
+    // Search appointment
     @Override
     public Appointment searchAppointment (String appointmentNumber){
         return appointmentDAO.findByAppointmentNumber(appointmentNumber);
     }
 
+    // All appointments
     @Override
     public List<Appointment> getAllAppointments(){
         return appointmentDAO.findAll();
     }
 
+    // Update appointment details
     @Override
-    public void updateAppointment(String appointmentNumber, LocalDate date, LocalTime time, String status) {
+    public void updateAppointment(String appointmentNumber, LocalDate date, LocalTime time, String status, List<Integer> treatmentIds) {
 
         if (date == null || time == null) {
             throw new IllegalArgumentException("Please enter a valid date and time.");
@@ -133,36 +140,49 @@ public class AppointmentServiceImpl implements AppointmentService{
         if (!"Pending".equals(status) && !"Completed".equals(status) && !"Cancelled".equals(status)) {
             throw new IllegalArgumentException("Invalid status value.");
         }
+        if (treatmentIds == null || treatmentIds.isEmpty()) {
+            throw new IllegalArgumentException("Please select at least one treatment type.");
+        }
 
+        // Find existing appointment
         Appointment existing = appointmentDAO.findByAppointmentNumber(appointmentNumber);
         if (existing == null) {
             throw new IllegalArgumentException("Appointment not found: " + appointmentNumber);
         }
-
 
         boolean dateTimeChanged = !existing.getAppointmentDate().equals(date) || !existing.getAppointmentTime().equals(time);
         if (dateTimeChanged && appointmentDAO.existsByDentistDateTime(existing.getDentist().getDentistId(), date, time)) {
             throw new IllegalArgumentException("This dentist already has another appointment at that date and time.");
         }
 
-        appointmentDAO.updateAppointment(appointmentNumber, date, time, status);
+        StringBuilder csv = new StringBuilder();
+        for (int i = 0; i < treatmentIds.size(); i++) {
+            if (i > 0) csv.append(",");
+            csv.append(treatmentIds.get(i));
+        }
+
+        appointmentDAO.updateAppointment(appointmentNumber, date, time, status, csv.toString());
     }
 
+    //Update appointment status
     @Override
     public void updateAppointmentStatus(String appointmentNumber, String status) {
         appointmentDAO.updateStatus(appointmentNumber, status);
     }
 
+    // All dentists
     @Override
     public List<Dentist> getAllDentists(){
         return dentistDAO.findAll();
     }
 
+    // All treatment types
     @Override
     public List<TreatmentType> getAllTreatmentTypes(){
         return treatmentTypeDAO.findAll();
     }
 
+    // Generate next appointment number
     private String generateAppointmentNumber(){
         int nextNumber = appointmentDAO.countAll() + 1;
         return String.format("APT%03d", nextNumber);

@@ -10,19 +10,26 @@ import java.util.List;
 
 public interface AppointmentService {
 
+    // Register new appointment
     Appointment registerAppointment(String nic, String patientName, String address, String contactNumber,
                                     int dentistId, List<Integer> treatmentIds, LocalDate date, LocalTime time);
 
+    // Search appointment by number
     Appointment searchAppointment(String appointmentNumber);
 
+    // All appointments
     List<Appointment> getAllAppointments();
 
+    // Update appointment status
     void updateAppointmentStatus (String appointmentNumber, String status);
 
-    void updateAppointment(String appointmentNumber, LocalDate date, LocalTime time, String status);
+    // Update appointment date, time, status and treatments
+    void updateAppointment(String appointmentNumber, LocalDate date, LocalTime time, String status, List<Integer> treatmentIds);
 
+    // All dentists
     List<Dentist> getAllDentists ();
 
+    // All treatment type
     List<TreatmentType> getAllTreatmentTypes();
 
 }

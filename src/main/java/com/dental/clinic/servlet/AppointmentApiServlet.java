@@ -18,6 +18,7 @@ public class AppointmentApiServlet extends HttpServlet{
 
     private final AppointmentService appointmentService = new AppointmentServiceImpl();
 
+    // Handle get request
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

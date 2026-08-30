@@ -1,16 +1,18 @@
 package com.dental.clinic.model;
 
 public class Patient {
-
+    // Patient details
     private int patientId;
     private String nic;
     private String name;
     private String address;
     private String contactNumber;
 
+    //Default Constructor
     public Patient() {
     }
 
+    // Constructor
     public Patient(int patientId, String nic, String name, String address, String contactNumber) {
         this.patientId = patientId;
         this.nic = nic;
@@ -19,6 +21,7 @@ public class Patient {
         this.contactNumber = contactNumber;
     }
 
+    // Getters and setters
     public int getPatientId() {
         return patientId;
     }
@@ -59,6 +62,7 @@ public class Patient {
         this.contactNumber = contactNumber;
     }
 
+    // Return patient details as text
     @Override
     public String toString() {
         return "Patient{" +

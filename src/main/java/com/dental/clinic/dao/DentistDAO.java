@@ -5,6 +5,9 @@ import java.util.List;
 
 public interface DentistDAO {
 
+    //All dentists
     List<Dentist> findAll();
+
+    //Find by id
     Dentist findById(int dentistId);
 }

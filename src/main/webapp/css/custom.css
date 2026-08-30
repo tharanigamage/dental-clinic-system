@@ -41,21 +41,36 @@ html, body {
 
 /*Buttons*/
 .btn-primary {
-    background-color: var(--bs-primary);
-    border-color: var(--bs-primary);
+    --bs-btn-bg: #0d7377;
+    --bs-btn-border-color: #0d7377;
+    --bs-btn-hover-bg: #0a5d60;
+    --bs-btn-hover-border-color: #0a5d60;
+    --bs-btn-active-bg: #094a4c;
+    --bs-btn-active-border-color: #094a4c !important;
+    --bs-btn-active-color: #ffffff !important;
+    --bs-btn-focus-shadow-rgb: 13, 115, 119;
 }
-.btn-primary:hover {
-    background-color: #0a5d60;
-    border-color: #0a5d60;
+.btn-primary:active {
+    background-color: #094a4c !important;
+    border-color: #094a4c !important;
+    color: #ffffff !important;
 }
+
 .btn-outline-primary {
-    color: var(--bs-primary);
-    border-color: var(--bs-primary);
+    --bs-btn-color: #0d7377;
+    --bs-btn-border-color: #0d7377;
+    --bs-btn-hover-bg: #0d7377;
+    --bs-btn-hover-border-color: #0d7377;
+    --bs-btn-hover-color: #ffffff;
+    --bs-btn-active-bg: #0a5d60;
+    --bs-btn-active-border-color: #0a5d60 !important;
+    --bs-btn-active-color: #ffffff !important;
+    --bs-btn-focus-shadow-rgb: 13, 115, 119;
 }
-.btn-outline-primary:hover {
-    background-color: var(--bs-primary);
-    border-color: var(--bs-primary);
-    color: #ffffff;
+.btn-outline-primary:active {
+    background-color: #0a5d60 !important;
+    border-color: #0a5d60 !important;
+    color: #ffffff !important;
 }
 
 /*Cards*/
@@ -80,10 +95,6 @@ html, body {
 .badge.bg-primary { background-color: var(--bs-primary) !important; }
 
 /*Login Page*/
-
-html, body {
-    height: 100%;
-}
 
 .login-split {
     display: flex;
@@ -182,4 +193,154 @@ html, body {
 /*Dashboard stat cards*/
 .stat-card h2, .stat-card h4 {
     font-weight: 700;
+}
+
+/*Bill Receipt Page*/
+.bill-card {
+    border-radius: 14px;
+    box-shadow: 0 6px 24px rgba(13, 115, 119, 0.12);
+}
+
+.bill-header {
+    background: #4a9a9d;
+    color: #ffffff;
+    padding: 24px 32px 20px;
+    text-align: center;
+    border-radius: 14px 14px 0 0;
+}
+
+.bill-header .clinic-icon {
+    width: 42px;
+    height: 42px;
+    margin-bottom: 8px;
+}
+
+.bill-header h4 {
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+.bill-header p {
+    color: rgba(255,255,255,0.85);
+    font-size: 0.85rem;
+    margin-bottom: 0;
+}
+
+.bill-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.22);
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 20px;
+    padding: 4px 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-top: 8px;
+}
+
+.bill-body {
+    padding: 28px 32px;
+}
+
+.info-table th {
+    color: #6b7a7a;
+    font-weight: 500;
+    font-size: 0.85rem;
+    padding: 6px 8px 6px 0 !important;
+    border: none !important;
+    width: 40%;
+}
+
+.info-table td {
+    color: #1a2e2e;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 6px 0 !important;
+    border: none !important;
+    text-align: right;
+}
+
+.info-table tr {
+    border-bottom: 1px dashed #e0e8e8;
+}
+
+.totals-box {
+    background: #f4f9f9;
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-top: 8px;
+}
+
+.totals-box table td {
+    border: none !important;
+    padding: 5px 0 !important;
+    font-size: 0.9rem;
+}
+
+.totals-box .total-row td {
+    border-top: 1px solid #cfe3e3 !important;
+    padding-top: 12px !important;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0d7377;
+}
+
+.bill-footer {
+    text-align: center;
+    padding: 18px 32px 24px;
+    color: #8a9a9a;
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+.bill-actions {
+    padding: 0 32px 28px;
+}
+
+@media print {
+    .no-print { display: none !important; }
+
+    @page {
+        size: A4 portrait;
+        margin: 15mm;
+    }
+
+    html, body {
+        width: 210mm;
+        height: auto;
+        overflow: visible;
+        background: #ffffff !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .flex-grow-1.p-4 {
+        margin-left: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+        padding: 0 !important;
+        display: block !important;
+        background-color: #ffffff !important;
+    }
+
+    .bill-card {
+        box-shadow: none !important;
+        border: 1px solid #e0e8e8 !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+    }
+
+    .info-table, .totals-box table {
+        width: 100% !important;
+        table-layout: fixed !important;
+        border-collapse: collapse !important;
+    }
+
+    tr {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
 }

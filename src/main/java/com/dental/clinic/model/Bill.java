@@ -3,6 +3,7 @@ package com.dental.clinic.model;
 import java.time.LocalDate;
 
 public class Bill {
+    // Bill details
     private String billId;
     private Appointment appointment;
     private double consultationFee;
@@ -10,9 +11,11 @@ public class Bill {
     private double totalAmount;
     private LocalDate billDate;
 
+    //Default Constructor
     public Bill() {
     }
 
+    // Constructor
     public Bill(String billId, Appointment appointment, double consultationFee, double treatmentCost, double totalAmount, LocalDate billDate) {
         this.billId = billId;
         this.appointment = appointment;
@@ -22,6 +25,7 @@ public class Bill {
         this.billDate = billDate;
     }
 
+    // Getters and setters
     public String getBillId() {
         return billId;
     }
@@ -70,6 +74,7 @@ public class Bill {
         this.billDate = billDate;
     }
 
+    // Return bill details as text
     @Override
     public String toString() {
         return "Bill { " +

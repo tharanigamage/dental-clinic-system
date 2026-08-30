@@ -1,5 +1,8 @@
 package com.dental.clinic.servlet;
 
+import com.dental.clinic.model.Patient;
+import com.dental.clinic.service.PatientService;
+import com.dental.clinic.service.PatientServiceImpl;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -8,21 +11,27 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.List;
 
-@WebServlet("/help")
-public class HelpServlet extends HttpServlet{
+@WebServlet("/patients")
+public class PatientServlet extends HttpServlet {
 
-    // Load the help page
+    private final PatientService patientService = new PatientServiceImpl();
+
+    // Load patient list page
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException{
+            throws ServletException, IOException {
 
-        if (!isLoggedIn(request)){
+        if (!isLoggedIn(request)) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
-        request.getRequestDispatcher("/help.jsp").forward(request, response);
+        List<Patient> patients = patientService.getAllPatients();
+        request.setAttribute("patients", patients);
+
+        request.getRequestDispatcher("/patients.jsp").forward(request, response);
     }
 
     private boolean isLoggedIn(HttpServletRequest request) {

@@ -26,6 +26,7 @@ public class ReportServlet extends HttpServlet{
     private final ReportService reportService = new ReportServiceImpl();
     private final AppointmentService appointmentService = new AppointmentServiceImpl();
 
+    // Load the report page
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -53,6 +54,7 @@ public class ReportServlet extends HttpServlet{
         request.getRequestDispatcher("/reports.jsp").forward(request, response);
     }
 
+    // Load daily appointment report
     private void handleDailyReport(HttpServletRequest request) {
         LocalDate selectedDate = ValidationUtil.parseDateSafely(request.getParameter("date"));
         if (selectedDate == null) {
@@ -65,6 +67,7 @@ public class ReportServlet extends HttpServlet{
         request.setAttribute("dailyAppointments", appointments);
     }
 
+    // Load monthly revenue report
     private void handleRevenueReport(HttpServletRequest request) {
         int month = parseIntSafely(request.getParameter("month"), LocalDate.now().getMonthValue());
         int year = parseIntSafely(request.getParameter("year"), LocalDate.now().getYear());
@@ -82,6 +85,7 @@ public class ReportServlet extends HttpServlet{
         request.setAttribute("totalRevenue", totalRevenue);
     }
 
+    // Load dentist appointment report
     private void handleDentistReport(HttpServletRequest request) {
         List<Dentist> dentists = appointmentService.getAllDentists();
         request.setAttribute("dentists", dentists);

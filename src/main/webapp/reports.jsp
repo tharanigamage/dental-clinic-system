@@ -12,9 +12,56 @@
     <style>
         @media print {
             .no-print { display: none !important; }
+
+            @page {
+                size: A4 portrait;
+                margin: 15mm;
+            }
+
+            html, body {
+                width: 210mm;
+                height: auto;
+                overflow: visible;
+                background: #ffffff !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .flex-grow-1.p-4 {
+                margin-left: 0 !important;
+                width: 100% !important;
+                height: auto !important;
+                min-height: 0 !important;
+                overflow: visible !important;
+                padding: 0 !important;
+                display: block !important;
+                background-color: #ffffff !important;
+            }
+
+            .card {
+                box-shadow: none !important;
+                border: none !important;
+                max-width: 100% !important;
+                width: 100% !important;
+                background-color: #ffffff !important;
+            }
+
+            .card-body {
+                padding: 0 !important;
+                background-color: #ffffff !important;
+            }
+
+            table {
+                width: 100% !important;
+                font-size: 11px !important;
+            }
+
+            tr {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
         }
     </style>
-</head>
 <body>
 <div class="d-flex">
     <div class="no-print">

@@ -22,7 +22,8 @@ public class DashboardServlet extends HttpServlet {
         private final DashboardService dashboardService = new DashboardServiceImpl();
     private final AppointmentService appointmentService = new AppointmentServiceImpl();
 
-        @Override
+    //Load dashboard data
+    @Override
         protected void doGet(HttpServletRequest request, HttpServletResponse response)
                 throws ServletException, IOException {
 

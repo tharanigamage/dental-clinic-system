@@ -18,12 +18,13 @@ public class ManageStaffServlet extends HttpServlet{
 
     private final StaffService staffService = new StaffServiceImpl();
 
+    // Load staff management page
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         if (!isAdmin(request)) {
-            response.sendRedirect(request.getContextPath() + "/home");
+            response.sendRedirect(request.getContextPath() + "/dashboard");
             return;
         }
 
@@ -33,6 +34,7 @@ public class ManageStaffServlet extends HttpServlet{
         request.getRequestDispatcher("/manageStaff.jsp").forward(request, response);
     }
 
+    //Handle staff management
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -50,10 +52,12 @@ public class ManageStaffServlet extends HttpServlet{
             handleEdit(request,response);
         } else if ("delete".equals(action)) {
             handleDelete(request);
+            request.getSession().setAttribute("successMessage", "Staff account removed successfully.");
             response.sendRedirect(request.getContextPath() + "/manageStaff");
         }
     }
 
+    // Handle add new staff account
     private void handleAdd(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -63,6 +67,7 @@ public class ManageStaffServlet extends HttpServlet{
 
         try {
             staffService.addStaff(username, password, role);
+            request.getSession().setAttribute("successMessage", "Staff account added successfully.");
             response.sendRedirect(request.getContextPath() + "/manageStaff");
         } catch (IllegalArgumentException e) {
             request.setAttribute("errorMessage", e.getMessage());
@@ -71,6 +76,7 @@ public class ManageStaffServlet extends HttpServlet{
         }
     }
 
+    // Handle edit staff account
     private void handleEdit(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -81,6 +87,7 @@ public class ManageStaffServlet extends HttpServlet{
 
         try {
             staffService.updateStaff(userId, username, password, role);
+            request.getSession().setAttribute("successMessage", "Staff account updated successfully.");
             response.sendRedirect(request.getContextPath() + "/manageStaff");
         } catch (IllegalArgumentException e) {
             request.setAttribute("errorMessage", e.getMessage());
@@ -89,6 +96,7 @@ public class ManageStaffServlet extends HttpServlet{
         }
     }
 
+    // Handle delete staff account
     private void handleDelete(HttpServletRequest request) {
         int userId = Integer.parseInt(request.getParameter("userId"));
         staffService.deleteStaff(userId);
