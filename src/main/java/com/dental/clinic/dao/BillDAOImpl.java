@@ -155,9 +155,6 @@ public class BillDAOImpl implements BillDAO{
 
         List<TreatmentType> treatmentTypes = fetchTreatmentsByCsv(rs.getString("treatment_id"));
 
-        List<TreatmentType> treatmentTypes = new ArrayList<>();
-        treatmentTypes.add(treatmentType);
-
         Appointment appointment = new Appointment();
         appointment.setAppointmentNumber(rs.getString("appointment_number"));
         appointment.setPatient(patient);
