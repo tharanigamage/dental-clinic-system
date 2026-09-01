@@ -86,9 +86,6 @@ public class ReportDAOImpl implements ReportDAO{
 
         List<TreatmentType> treatmentTypes = fetchTreatmentsByCsv(rs.getString("treatment_id"));
 
-        List<TreatmentType> treatmentTypes = new ArrayList<>();
-        treatmentTypes.add(treatmentType);
-
         Appointment appointment = new Appointment();
         appointment.setAppointmentNumber(rs.getString("appointment_number"));
         appointment.setPatient(patient);
@@ -146,9 +143,6 @@ public class ReportDAOImpl implements ReportDAO{
         dentist.setConsultationFee(rs.getDouble("consultation_fee"));
 
         List<TreatmentType> treatmentTypes = fetchTreatmentsByCsv(rs.getString("treatment_id"));
-
-        List<TreatmentType> treatmentTypes = new ArrayList<>();
-        treatmentTypes.add(treatmentType);
 
         Appointment appointment = new Appointment();
         appointment.setAppointmentNumber(rs.getString("appointment_number"));
